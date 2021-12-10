@@ -1,11 +1,28 @@
 <template>
   <div class="dashboard">
-    <el-row class="main" :gutter="40">
-      <el-col>
+    <el-dialog width="30%" :visible.sync="dialogVisible" :before-close="handleClose">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage1"
+        :page-size="1"
+        style="text-align:center;"
+        layout=" prev, pager, next"
+        :total="3">
+      </el-pagination>
+      <page1 v-show="currentPage1===1"></page1>
+      <page2 v-show="currentPage1===2"></page2>
+      <page3 v-show="currentPage1===3"></page3>
+    </el-dialog>
+    <el-dialog width="30%" :visible.sync="diag2_visible" :before-close="handleClose">
+      <p style="text-align: center">完成运行</p>
+    </el-dialog>
+    <el-row class="main" style="flex:7; margin-right: 20px" :gutter="40">
+      <el-col style="flex: 4">
         <el-card
           id="CT_image_1"
           class="box-card1"
-
+          style="margin-bottom: 20px;height: 400px"
           :header-style="{
           height: '60px'
         }"
@@ -33,7 +50,6 @@
             </el-button>
           </div>
           <el-row class="body1" :span="12" >
-
               <div class="demo-image__preview">
                 <el-image
                   :src="rurl[0]"
@@ -52,7 +68,6 @@
                   >
                 </div>
               </div>
-
               <div class="demo-image__preview">
                 <el-image
                   :src="rurl[1]"
@@ -71,7 +86,6 @@
                   >
                 </div>
               </div>
-
               <div class="demo-image__preview">
                 <el-image
                   :src="rurl[2]"
@@ -89,7 +103,6 @@
                   >
                 </div>
               </div>
-
               <div class="demo-image__preview">
                 <el-image
                   :src="rurl[3]"
@@ -108,7 +121,6 @@
                   >
                 </div>
               </div>
-
               <div class="demo-image__preview">
               <el-image
                 :src="rurl[4]"
@@ -127,15 +139,14 @@
                 >
               </div>
             </div>
-
           </el-row>
         </el-card>
       </el-col>
-      <el-col>
+      <el-col style="flex: 6">
         <el-card
           id="CT_image_2"
           class="box-card2"
-          style="
+          style="margin-bottom: 20px;
           border-radius: 8px;"
           :header-style="{
           height: '60px'
@@ -163,44 +174,48 @@
               </el-option>
             </el-select>
           </div>
-          <div class="demo1">
-            <el-image
-              :src="murl[link_dic[radio]]"
-              class="image_1"
-              style="border-radius: 3px 3px 0 0;
-                width: 240px;
-                height: 240px;
-                "
-              :preview-src-list = "[murl[link_dic[radio]]]"
-              @click.native.stop="click_test()"
-            >
-              <div slot="error">
-                <div slot="placeholder" class="error"></div>
+          <el-col class="body2"  >
+            <el-row class="demo1">
+              <el-image
+                :src="murl[link_dic[radio]]"
+                class="image_1"
+                style="border-radius: 3px 3px 0 0;
+                  width: 240px;
+                  height: 240px;
+                  "
+                :preview-src-list = "[murl[link_dic[radio]]]"
+                @click.native.stop="click_test()"
+              >
+                <div slot="error">
+                  <div slot="placeholder" class="error"></div>
+                </div>
+              </el-image>
+              <div class="info_2">
+                <span style="color: black; letter-spacing: 4px">病灶分割结果</span>
               </div>
-            </el-image>
-            <div class="info_2">
-              <span style="color: black; letter-spacing: 4px">病灶分割结果</span>
+            </el-row>
+            <el-row class="charts">
+              <div class="st">
+                <div id="prob" style="width: 420px;
+                 height: 200px;
+                 fontSize:25px;
+                 padding-left:5px" ></div>
+              </div>
+              <div class="num">
+              <div id="num" :style="{width: '420px', height: '200px',fontSize:'25px'}" ></div>
             </div>
-          </div>
-          <div class="st">
-            <div id="prob" style="width: 420px;
-             height: 200px;
-             fontSize:25px;
-             padding-left:5px" ></div>
-          </div>
-          <div class="num">
-            <div id="num" :style="{width: '450px', height: '200px',fontSize:'25px'}" ></div>
-          </div>
+            </el-row>
+          </el-col>
         </el-card>
       </el-col>
     </el-row>
-    <el-row class="mt20">
+    <el-row class="side" style="flex:2">
       <el-card class="box-card"
                :header-style="{
             height: '60px'
           }"
                style="width: 200px;
-               height:120%"
+               height:97%"
           >
         <div slot="header" class="clearfix">
           <span>糖网分级详情</span>
@@ -225,7 +240,7 @@ import axios from 'axios'
 import Page1 from '@/components/diag/page1'
 import Page2 from '@/components/diag/page2'
 import Page3 from '@/components/diag/page3'
-import { ref } from 'vue'
+
 // eslint-disable-next-line no-unused-vars
 let echarts = require('echarts/lib/echarts')
 // 引入柱状图组件
@@ -238,10 +253,11 @@ export default {
   components: {
     Page1,
     Page2,
-    Page3,
+    Page3
   },
   data () {
     return {
+      diag2_visible: false,
       showViewer: false,
       currentPage1: 1,
       url_tmp: 'http://www.zj.xinhuanet.com/edu/txcj.htm',
@@ -290,8 +306,8 @@ export default {
       weightl: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
     }
   },
-  activated(){
-    this.init();
+  activated () {
+    this.init()
   },
   mounted () {
     // 在mounted生命周期或方法中执行下述代码
@@ -311,14 +327,14 @@ export default {
     }
   },
   methods: {
-    click_test ( ) {
-      console.log("test_success")
+    click_test () {
+      console.log('test_success')
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`);
+      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`);
+      console.log(`当前页: ${val}`)
     },
     dia_for () {
       console.log(this.url_tmp)
@@ -388,56 +404,31 @@ export default {
         tooltip: {
 
         },
-        toolbox: {
-          show: false,
-          top: 10,
-          right: 10,
-          feature: {
-            mark: { show: false },
-            magicType: { show: false, type: ['line', 'bar'] },
-            restore: { show: false },
-            saveAsImage: { show: false }
-          }
-        },
-        grid: { // 调整统计图上下左右边距
-          top: 80,
-          right: 70,
-          bottom: 50,
-          left: 75
-        },
         legend: {
           show: 'true',
-          top: 45, // 统计图两个方块到Title的距离
-          data: ['病灶个数', '病灶面积(像素点)']
+          top: 25, // 统计图两个方块到Title的距离
+          data: ['病灶个数(个)', '病灶面积(像素点)']
         },
         calculable: true,
         xAxis: [
           {
             type: 'category',
             data: ['微血管瘤', '硬性渗出', '出血', '棉绒斑'],
-            axisPointer: {
-              type: 'shadow'
-            },
             axisLabel: {
               show: true,
               textStyle: {
-                color: '#666666'
+                color: '#000000'
               }
             },
             axisLine: { // X轴线的颜色
               lineStyle: {
-                color: '#D5D5D5',
-                width: 2
+
               }
             }
           }
         ],
         yAxis: [
           {
-
-            splitLine: { // 控制刻度横线的显示
-              show: false
-            },
             type: 'value',
             // max: 20,
             max: function (value) {
@@ -452,17 +443,10 @@ export default {
               fontSize: 16
             },
             axisLabel: {
-              formatter: '{value} 个',
-              show: true,
-              textStyle: {
-                color: '#666666'
-              }
+              formatter: '{value} ',
+              show: true
             },
             axisLine: { // Y轴线的颜色、和轴线的宽度
-              lineStyle: {
-                color: '#D5D5D5',
-                width: 2
-              }
             }
           },
           {
@@ -483,22 +467,15 @@ export default {
             },
             axisLabel: {
               formatter: '{value}',
-              show: true,
-              textStyle: {
-                color: '#666666'
-              }
+              show: true
             },
             axisLine: {
-              lineStyle: {
-                color: '#D5D5D5',
-                width: 2
-              }
             }
           }
         ],
         series: [
           {
-            name: '病灶个数',
+            name: '病灶个数(个)',
             type: 'bar',
             yAxisIndex: 0,
             data: this.numl[this.link_dic[this.radio]],
@@ -506,7 +483,7 @@ export default {
               normal: {
                 show: true,
                 position: 'top',
-                formatter: '{c}个'
+                formatter: '{c}'
               }
             },
             itemStyle: { // 双Y轴A柱的柱体颜色
@@ -524,7 +501,7 @@ export default {
               normal: {
                 show: true,
                 position: 'top',
-                formatter: '{c}像素'
+                formatter: '{c}'
               }
             },
             itemStyle: { // 双Y轴B柱的柱体颜色
@@ -591,16 +568,20 @@ export default {
           this.probl = res.data.probl
           this.weightl = res.data.weightl
           this.flag = 1
+          this.loading_bt = false
+          this.diag2_visible = true
         })
-      this.dialogTableVisible = false
-      this.loading_bt = false
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import "~styles/common.scss";
+.body2{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
 .body1{
   display: flex;
   flex-wrap: wrap;//允许换行排列
@@ -626,13 +607,29 @@ export default {
   top:40px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.09);
 }
+.info_1 {
+  height: 30px;
+  width: 130px;
+  text-align: center;
+  top: 180px;
+  position: absolute;
+  background-color: #ffffff;
+  line-height: 30px;
+}
+.info_2 {
+  height: 30px;
+  width: 240px;
+  text-align: center;
+  top: 310px;
+  position: absolute;
+  background-color: #ffffff;
+  line-height: 30px;
+}
 .dashboard {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC,
   Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
   sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
-  padding-bottom: 20px;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
 }
 </style>
