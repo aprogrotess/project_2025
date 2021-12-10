@@ -10,9 +10,9 @@
         layout=" prev, pager, next"
         :total="3">
       </el-pagination>
-      <page1 v-show="currentPage1==1"></page1>
-      <page2 v-show="currentPage1==2"></page2>
-      <page3 v-show="currentPage1==3"></page3>
+      <page1 v-show="currentPage1===1"></page1>
+      <page2 v-show="currentPage1===2"></page2>
+      <page3 v-show="currentPage1===3"></page3>
     </el-dialog>
     <div id="base">
       <div>
@@ -254,7 +254,7 @@ import axios from 'axios'
 import Page1 from '@/components/diag/page1'
 import Page2 from '@/components/diag/page2'
 import Page3 from '@/components/diag/page3'
-import { ref } from 'vue'
+
 // eslint-disable-next-line no-unused-vars
 let echarts = require('echarts/lib/echarts')
 // 引入柱状图组件
@@ -267,7 +267,7 @@ export default {
   components: {
     Page1,
     Page2,
-    Page3,
+    Page3
   },
   data () {
     return {
@@ -319,8 +319,8 @@ export default {
       weightl: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
     }
   },
-  activated(){
-    this.init();
+  activated () {
+    this.init()
   },
   mounted () {
     // 在mounted生命周期或方法中执行下述代码
@@ -340,14 +340,14 @@ export default {
     }
   },
   methods: {
-    click_test ( ) {
-      console.log("test_success")
+    click_test () {
+      console.log('test_success')
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`);
+      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`);
+      console.log(`当前页: ${val}`)
     },
     dia_for () {
       console.log(this.url_tmp)
@@ -628,7 +628,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "~styles/common.scss";
+
 * {
   box-sizing: border-box;
   margin: 0;
