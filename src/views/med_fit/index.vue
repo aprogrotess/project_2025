@@ -202,7 +202,7 @@
                  padding-left:5px" ></div>
               </div>
               <div class="num">
-              <div id="num" :style="{width: '420px', height: '200px',fontSize:'25px'}" ></div>
+              <div id="num" :style="{width: '425px', height: '200px',fontSize:'25px'}" ></div>
             </div>
             </el-row>
           </el-col>
@@ -402,7 +402,8 @@ export default {
           text: '病灶数量与面积'
         },
         tooltip: {
-
+          trigger: 'axis',
+          axisPointer: { type: 'cross' }
         },
         legend: {
           show: 'true',
@@ -429,18 +430,17 @@ export default {
         ],
         yAxis: [
           {
+            name: '个数',
             type: 'value',
+            position: 'right',
             // max: 20,
             max: function (value) {
               return value.max + 10
             },
             minInterval: 1,
             // name:"推\n送\n班\n级\n数",
-            nameLocation: 'center',
-            nameGap: 35,
-            nameRotate: 0,
             nameTextStyle: {
-              fontSize: 16
+              fontSize: 12
             },
             axisLabel: {
               formatter: '{value} ',
@@ -450,6 +450,7 @@ export default {
             }
           },
           {
+            name: '像素点',
             splitLine: {
               show: false
             },
@@ -458,13 +459,12 @@ export default {
               return value.max + 10
             },
             // name:"平\n均\n完\n成\n率",
-            nameLocation: 'center',
-            nameGap: 50,
-            nameRotate: 0,
+
             minInterval: 1,
             nameTextStyle: {
-              fontSize: 16
+              fontSize: 12
             },
+            position: 'left',
             axisLabel: {
               formatter: '{value}',
               show: true
@@ -509,6 +509,85 @@ export default {
                 color: '#ffae82'
               }
             }
+          }
+        ]
+      }
+      let test_op = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: { type: 'cross' }
+        },
+        legend: {},
+        xAxis: [
+          {
+            type: 'category',
+            axisTick: {
+              alignWithLabel: true
+            },
+            data: [
+              '1月',
+              '2月',
+              '3月',
+              '4月',
+              '5月',
+              '6月',
+              '7月',
+              '8月',
+              '9月',
+              '10月',
+              '11月',
+              '12月'
+            ]
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            name: '降水量',
+            min: 0,
+            max: 250,
+            position: 'right',
+            axisLabel: {
+              formatter: '{value} ml'
+            }
+          },
+          {
+            type: 'value',
+            name: '温度',
+            min: 0,
+            max: 25,
+            position: 'left',
+            axisLabel: {
+              formatter: '{value} °C'
+            }
+          }
+        ],
+        series: [
+          {
+            name: '降水量',
+            type: 'bar',
+            yAxisIndex: 0,
+            data: [6, 32, 70, 86, 68.7, 100.7, 125.6, 112.2, 78.7, 48.8, 36.0, 19.3]
+          },
+          {
+            name: '温度',
+            type: 'line',
+            smooth: true,
+            yAxisIndex: 1,
+            data: [
+              6.0,
+              10.2,
+              10.3,
+              11.5,
+              10.3,
+              13.2,
+              14.3,
+              16.4,
+              18.0,
+              16.5,
+              12.0,
+              5.2
+            ]
           }
         ]
       }
@@ -558,7 +637,7 @@ export default {
       let config = {
         headers: { 'Content-Type': 'multipart/form-data' }
       }
-      axios.post('http://127.0.0.1:5000/med1run', param, config)
+      axios.post('http://127.0.0.1:5000/med1run_fake', param, config)
         .then(res => {
           this.murl = []
           for (let i = 0; i < 5; i++) {

@@ -2,25 +2,25 @@
   <div class="page2">
     <el-row :gutter="40">
       <el-col>
-        <el-image class="product-info__image" :src="require('@/assets/images/dia_p.png')"  :preview-src-list = "['@/assets/images/dia_p.png']" >
+        <el-image class="product-info__image" :src="require('@/assets/images/dia_p.png')" >
         </el-image>
         <div class="right_body_text">
           <p class="product-info__outline">基于眼底彩照</p>
           <div>
             <span class="num">1</span>
-            基于眼底彩照的糖尿病视网膜病变分级和病灶检测
+            糖尿病视网膜病变分级和病灶检测
           </div>
           <div>
             <span class="num">2</span>
-            基于眼底彩照的青光眼识别
+            青光眼识别
           </div>
           <div>
             <span class="num">3</span>
-            眼底彩照的黄斑中心定位和黄斑病变识别
+            黄斑中心定位和黄斑病变识别
           </div>
           <div>
             <span class="num">4</span>
-            基于眼底彩照的血管分割
+            血管分割
           </div>
         </div>
       </el-col>
