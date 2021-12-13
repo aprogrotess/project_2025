@@ -1,6 +1,6 @@
 <template>
-  <div class="dashboard">
-    <el-dialog width="30%" :visible.sync="dialogVisible" :before-close="handleClose">
+  <div class="dashboard" >
+    <el-dialog width="30%" :visible.sync="dialogVisible" :before-close="handleClose" :title="title">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -10,6 +10,12 @@
         layout=" prev, pager, next"
         :total="3">
       </el-pagination>
+      <div slot="title" class="header-title">
+        <img :src="require('@/assets/images/img_1.png')" style=" display: inline-block;
+          height: auto;
+          max-width: 100%;">
+        <span>{{title}}</span>
+      </div>
       <page1 v-show="currentPage1===1"></page1>
       <page2 v-show="currentPage1===2"></page2>
       <page3 v-show="currentPage1===3"></page3>

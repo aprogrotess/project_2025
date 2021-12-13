@@ -7,20 +7,14 @@
         @click="handleMenuFold"
       ></cc-svg-icon>
     </div>
-    <div>
-      <transition-group
-        tag="el-breadcrumb"
-        separator-class="el-icon-arrow-right"
-        name="fade-move"
-      >
-        <el-breadcrumb-item
-          v-for="item in getBreadcrumbItems"
-          :key="item.path"
-          >{{ $t(item.name) }}</el-breadcrumb-item
-        >
-      </transition-group>
-    </div>
 
+    <div style="text-align: center;" >
+    <img :src="require('@/assets/images/cx.png')" style=" display: inline-block;
+          height: 100%;
+          display: table-cell; //主要是这个属性
+         vertical-align: middle;
+         ">
+    </div>
     <div class="header-right">
       <div class="icon-items">
         <el-dropdown

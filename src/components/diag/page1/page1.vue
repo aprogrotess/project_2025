@@ -35,6 +35,9 @@ export default {
   -webkit-box-align: start;
   flex-direction:column;
   text-align:center;
+  display: inline-block;
+  height: 100%;
+  max-width: 100%;
 }
 .product-info__image{
   vertical-align:middle;
