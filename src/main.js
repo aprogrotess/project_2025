@@ -7,6 +7,8 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 import Element from 'element-ui'
 import echarts from 'echarts'
+import VCharts from 'v-charts'
+Vue.use(VCharts)
 import './components'
 import './assets/icons'
 import './lib/element-ui'

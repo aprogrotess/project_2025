@@ -1,6 +1,6 @@
 <template>
-  <div id="content">
-    <el-dialog width="30%" :visible.sync="dialogVisible" :before-close="handleClose">
+  <div class="dashboard" >
+    <el-dialog width="30%" :visible.sync="dialogVisible" :before-close="handleClose" :title="title">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -10,29 +10,28 @@
         layout=" prev, pager, next"
         :total="3">
       </el-pagination>
+      <div slot="title" class="header-title">
+        <img :src="require('@/assets/images/img_1.png')" style=" display: inline-block;
+          height: auto;
+          max-width: 100%;">
+        <span>{{title}}</span>
+      </div>
       <page1 v-show="currentPage1===1"></page1>
       <page2 v-show="currentPage1===2"></page2>
       <page3 v-show="currentPage1===3"></page3>
     </el-dialog>
-    <div id="base">
-      <div>
+    <el-dialog width="30%" :visible.sync="diag2_visible" :before-close="handleClose">
+      <p style="text-align: center">完成运行</p>
+    </el-dialog>
+    <el-row class="main" style="flex:7; margin-right: 20px" :gutter="40">
+      <el-col style="flex: 4">
         <el-card
           id="CT_image_1"
           class="box-card1"
-          style="
-          border-radius: 8px;
-          width: 840px;
-          height: 300px;
-          margin-bottom: 30px;
-        "
+          style="margin-bottom: 20px;height: 400px"
           :header-style="{
           height: '60px'
         }"
-          :body-style="{ position:absolute,
-          left:'91px',
-          top:'29px',
-          width:'812px',
-          height:'225px'}"
         >
           <div slot="header" class="clearfix">
             <span class="steps" >原始图片</span>
@@ -56,115 +55,108 @@
               />
             </el-button>
           </div>
-          <div class="demo-image__preview1">
-            <el-image
-              :src="rurl[0]"
-              class="image_1"
-              style="border-radius: 3px 3px 0 0;
-                "
-              :preview-src-list = "[rurl[0]]"
-            >
-              <div slot="error">
+          <el-row class="body1" :span="12" >
+            <div class="demo-image__preview">
+              <el-image
+                :src="rurl[0]"
+                class="image_1"
+                style="border-radius: 3px 3px 0 0;
+                    "
+                :preview-src-list = "[rurl[0]]"
+              >
+                <div slot="error">
+                  <div slot="placeholder" class="error"></div>
+                </div>
+              </el-image>
+              <div class="info_1">
+                  <span style="color: black; letter-spacing: 4px"
+                  >患者一</span
+                  >
+              </div>
+            </div>
+            <div class="demo-image__preview">
+              <el-image
+                :src="rurl[1]"
+                class="image_1"
+                style="border-radius: 3px 3px 0 0;
+                    "
+                :preview-src-list = "[rurl[1]]"
+              >
+                <div slot="error">
+                  <div slot="placeholder" class="error"></div>
+                </div>
+              </el-image>
+              <div class="info_1">
+                  <span style="color: black; letter-spacing: 4px"
+                  >患者二</span
+                  >
+              </div>
+            </div>
+            <div class="demo-image__preview">
+              <el-image
+                :src="rurl[2]"
+                class="image_1"
+                style="border-radius: 3px 3px 0 0;
+                    "
+                :preview-src-list = "[rurl[2]]"
+              ><div slot="error">
                 <div slot="placeholder" class="error"></div>
               </div>
-            </el-image>
-            <div class="info_1">
-              <span style="color: black; letter-spacing: 4px"
-              >患者一</span
-              >
-            </div>
-          </div>
-          <div class="demo-image__preview2">
-            <el-image
-              :src="rurl[1]"
-              class="image_1"
-              style="border-radius: 3px 3px 0 0;
-                "
-              :preview-src-list = "[rurl[1]]"
-              @click="preview()"
-            >
-              <div slot="error">
-                <div slot="placeholder" class="error"></div>
+              </el-image>
+              <div class="info_1">
+                  <span style="color: black; letter-spacing: 4px"
+                  >患者三</span
+                  >
               </div>
-            </el-image>
-            <div class="info_1">
-              <span style="color: black; letter-spacing: 4px"
-              >患者二</span
+            </div>
+            <div class="demo-image__preview">
+              <el-image
+                :src="rurl[3]"
+                class="image_1"
+                style="border-radius: 3px 3px 0 0;
+                    "
+                :preview-src-list = "[rurl[3]]"
               >
-            </div>
-          </div>
-          <div class="demo-image__preview3">
-            <el-image
-              :src="rurl[2]"
-              class="image_1"
-              style="border-radius: 3px 3px 0 0;
-                "
-              :preview-src-list = "[rurl[2]]"
-            ><div slot="error">
-              <div slot="placeholder" class="error"></div>
-            </div>
-            </el-image>
-            <div class="info_1">
-              <span style="color: black; letter-spacing: 4px"
-              >患者三</span
-              >
-            </div>
-          </div>
-          <div class="demo-image__preview4">
-            <el-image
-              :src="rurl[3]"
-              class="image_1"
-              style="border-radius: 3px 3px 0 0;
-                "
-              :preview-src-list = "[rurl[3]]"
-            >
-              <div slot="error">
-                <div slot="placeholder" class="error"></div>
+                <div slot="error">
+                  <div slot="placeholder" class="error"></div>
+                </div>
+              </el-image>
+              <div class="info_1">
+                  <span style="color: black; letter-spacing: 4px"
+                  >患者四</span
+                  >
               </div>
-            </el-image>
-            <div class="info_1">
-              <span style="color: black; letter-spacing: 4px"
-              >患者四</span
-              >
             </div>
-          </div>
-          <div class="demo-image__preview5">
-            <el-image
-              :src="rurl[4]"
-              class="image_1"
-              style="border-radius: 3px 3px 0 0;
-                "
-              :preview-src-list = "[rurl[4]]"
-            >
-              <div slot="error">
-                <div slot="placeholder" class="error"></div>
+            <div class="demo-image__preview">
+              <el-image
+                :src="rurl[4]"
+                class="image_1"
+                style="border-radius: 3px 3px 0 0;
+                  "
+                :preview-src-list = "[rurl[4]]"
+              >
+                <div slot="error">
+                  <div slot="placeholder" class="error"></div>
+                </div>
+              </el-image>
+              <div class="info_1">
+                <span style="color: black; letter-spacing: 4px"
+                >患者五</span
+                >
               </div>
-            </el-image>
-            <div class="info_1">
-              <span style="color: black; letter-spacing: 4px"
-              >患者五</span
-              >
             </div>
-          </div>
+          </el-row>
         </el-card>
-      </div>
-      <div>
+      </el-col>
+      <el-col style="flex: 6">
         <el-card
           id="CT_image_2"
           class="box-card2"
-          style="
-          border-radius: 8px;
-          width: 840px;
-          height: 520px;
-          margin-bottom: -30px;
-        "
+          style="margin-bottom: 20px;
+          border-radius: 8px;"
           :header-style="{
           height: '60px'
         }"
-          :body-style="{ position:absolute,
-          left:'91px',
-          width:'812px',
-          height:'300px'}"
         >
           <div slot="header" class="clearfix">
             <span class="steps" >处理结果</span>
@@ -188,49 +180,49 @@
               </el-option>
             </el-select>
           </div>
-          <div class="demo1">
-            <el-image
-              :src="murl[link_dic[radio]]"
-              class="image_1"
-              style="border-radius: 3px 3px 0 0;
-                width: 240px;
-                height: 240px;
-                "
-              :preview-src-list = "[murl[link_dic[radio]]]"
-              @click.native.stop="click_test()"
-            >
-              <div slot="error">
-                <div slot="placeholder" class="error"></div>
+          <el-col class="body2"  >
+            <el-row class="demo1">
+              <el-image
+                :src="murl[link_dic[radio]]"
+                class="image_1"
+                style="border-radius: 3px 3px 0 0;
+                  width: 240px;
+                  height: 240px;
+                  "
+                :preview-src-list = "[murl[link_dic[radio]]]"
+                @click.native.stop="click_test()"
+              >
+                <div slot="error">
+                  <div slot="placeholder" class="error"></div>
+                </div>
+              </el-image>
+              <div class="info_2">
+                <span style="color: black; letter-spacing: 4px">病灶分割结果</span>
               </div>
-            </el-image>
-            <div class="info_2">
-              <span style="color: black; letter-spacing: 4px">病灶分割结果</span>
-            </div>
-          </div>
-          <div class="st">
-            <div id="prob" style="width: 420px;
-             height: 200px;
-             fontSize:25px;
-             padding-left:5px" ></div>
-          </div>
-          <div class="num">
-            <div id="num" :style="{width: '450px', height: '200px',fontSize:'25px'}" ></div>
-          </div>
+            </el-row>
+            <el-row class="charts">
+              <div class="st">
+                <div id="prob" style="width: 420px;
+                 height: 200px;
+                 fontSize:25px;
+                 padding-left:5px" ></div>
+              </div>
+              <div class="num">
+                <div id="num" :style="{width: '425px', height: '200px',fontSize:'25px'}" ></div>
+              </div>
+            </el-row>
+          </el-col>
         </el-card>
-      </div>
-    </div>
-    <div id="aside">
+      </el-col>
+    </el-row>
+    <el-row class="side" style="flex:2">
       <el-card class="box-card"
                :header-style="{
             height: '60px'
           }"
-               style="{
-          width:100px;
-          left:900px;
-          height: 830px;
-          margin-top:0px;
-          position:absolute;
-          }">
+               style="width: 200px;
+               height:97%"
+      >
         <div slot="header" class="clearfix">
           <span>糖网分级详情</span>
         </div>
@@ -246,7 +238,7 @@
           <p>四级-高度增殖期：眼底出现以下一个或以上改变：1.新生血管生成2.玻璃体内出血/视网膜前出血</p>
         </div>
       </el-card>
-    </div>
+    </el-row>
   </div>
 </template>
 <script>
@@ -271,6 +263,7 @@ export default {
   },
   data () {
     return {
+      diag2_visible: false,
       showViewer: false,
       currentPage1: 1,
       url_tmp: 'http://www.zj.xinhuanet.com/edu/txcj.htm',
@@ -415,28 +408,12 @@ export default {
           text: '病灶数量与面积'
         },
         tooltip: {
-
-        },
-        toolbox: {
-          show: false,
-          top: 10,
-          right: 10,
-          feature: {
-            mark: { show: false },
-            magicType: { show: false, type: ['line', 'bar'] },
-            restore: { show: false },
-            saveAsImage: { show: false }
-          }
-        },
-        grid: { // 调整统计图上下左右边距
-          top: 80,
-          right: 70,
-          bottom: 50,
-          left: 75
+          trigger: 'axis',
+          axisPointer: { type: 'cross' }
         },
         legend: {
           show: 'true',
-          top: 45, // 统计图两个方块到Title的距离
+          top: 25, // 统计图两个方块到Title的距离
           data: ['病灶个数(个)', '病灶面积(像素点)']
         },
         calculable: true,
@@ -444,57 +421,42 @@ export default {
           {
             type: 'category',
             data: ['微血管瘤', '硬性渗出', '出血', '棉绒斑'],
-            axisPointer: {
-              type: 'shadow'
-            },
             axisLabel: {
               show: true,
               textStyle: {
-                color: '#666666'
+                color: '#000000'
               }
             },
             axisLine: { // X轴线的颜色
               lineStyle: {
-                color: '#D5D5D5',
-                width: 2
+
               }
             }
           }
         ],
         yAxis: [
           {
-
-            splitLine: { // 控制刻度横线的显示
-              show: false
-            },
+            name: '个数',
             type: 'value',
+            position: 'right',
             // max: 20,
             max: function (value) {
               return value.max + 10
             },
             minInterval: 1,
             // name:"推\n送\n班\n级\n数",
-            nameLocation: 'center',
-            nameGap: 35,
-            nameRotate: 0,
             nameTextStyle: {
-              fontSize: 16
+              fontSize: 12
             },
             axisLabel: {
               formatter: '{value} ',
-              show: true,
-              textStyle: {
-                color: '#666666'
-              }
+              show: true
             },
             axisLine: { // Y轴线的颜色、和轴线的宽度
-              lineStyle: {
-                color: '#D5D5D5',
-                width: 2
-              }
             }
           },
           {
+            name: '像素点',
             splitLine: {
               show: false
             },
@@ -503,25 +465,17 @@ export default {
               return value.max + 10
             },
             // name:"平\n均\n完\n成\n率",
-            nameLocation: 'center',
-            nameGap: 50,
-            nameRotate: 0,
+
             minInterval: 1,
             nameTextStyle: {
-              fontSize: 16
+              fontSize: 12
             },
+            position: 'left',
             axisLabel: {
               formatter: '{value}',
-              show: true,
-              textStyle: {
-                color: '#666666'
-              }
+              show: true
             },
             axisLine: {
-              lineStyle: {
-                color: '#D5D5D5',
-                width: 2
-              }
             }
           }
         ],
@@ -553,7 +507,7 @@ export default {
               normal: {
                 show: true,
                 position: 'top',
-                formatter: '{c}像素'
+                formatter: '{c}'
               }
             },
             itemStyle: { // 双Y轴B柱的柱体颜色
@@ -561,6 +515,85 @@ export default {
                 color: '#ffae82'
               }
             }
+          }
+        ]
+      }
+      let test_op = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: { type: 'cross' }
+        },
+        legend: {},
+        xAxis: [
+          {
+            type: 'category',
+            axisTick: {
+              alignWithLabel: true
+            },
+            data: [
+              '1月',
+              '2月',
+              '3月',
+              '4月',
+              '5月',
+              '6月',
+              '7月',
+              '8月',
+              '9月',
+              '10月',
+              '11月',
+              '12月'
+            ]
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            name: '降水量',
+            min: 0,
+            max: 250,
+            position: 'right',
+            axisLabel: {
+              formatter: '{value} ml'
+            }
+          },
+          {
+            type: 'value',
+            name: '温度',
+            min: 0,
+            max: 25,
+            position: 'left',
+            axisLabel: {
+              formatter: '{value} °C'
+            }
+          }
+        ],
+        series: [
+          {
+            name: '降水量',
+            type: 'bar',
+            yAxisIndex: 0,
+            data: [6, 32, 70, 86, 68.7, 100.7, 125.6, 112.2, 78.7, 48.8, 36.0, 19.3]
+          },
+          {
+            name: '温度',
+            type: 'line',
+            smooth: true,
+            yAxisIndex: 1,
+            data: [
+              6.0,
+              10.2,
+              10.3,
+              11.5,
+              10.3,
+              13.2,
+              14.3,
+              16.4,
+              18.0,
+              16.5,
+              12.0,
+              5.2
+            ]
           }
         ]
       }
@@ -610,7 +643,7 @@ export default {
       let config = {
         headers: { 'Content-Type': 'multipart/form-data' }
       }
-      axios.post('http://127.0.0.1:5000/med1run', param, config)
+      axios.post('http://127.0.0.1:5000/med1run_fake', param, config)
         .then(res => {
           this.murl = []
           for (let i = 0; i < 5; i++) {
@@ -620,115 +653,42 @@ export default {
           this.probl = res.data.probl
           this.weightl = res.data.weightl
           this.flag = 1
+          this.loading_bt = false
+          this.diag2_visible = true
         })
-      this.dialogTableVisible = false
-      this.loading_bt = false
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-.diag{
-  font-size: 20px;
-  line-height: 1.6;
-  text-align: justify;
-  text-indent: 2em;
-}
-#hello p {
-  font-size: 15px !important;
-  /*line-height: 25px;*/
-}
-.n1 .el-step__description {
-  padding-right: 20%;
-  font-size: 14px;
-  line-height: 20px;
-  /* font-weight: 400; */
-}
-.el-button {
-
-  top: 120px;
-  left: 70px;
-  position: absolute;
-}
-.dialog_info {
-  margin: 20px auto;
-}
-.text {
-  font-size: 14px;
-}
-.item {
-  margin-bottom: 18px;
-}
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.el-card__body{
-  width: 680px;
-  height: 260px;
-  border-radius: 8px;
-  margin-top: -20px;
-}
-.clearfix:after {
-  clear: both;
-}
-.box-card {
-  width: 180px;
-  height: 300px;
-  border-radius: 8px;
-  margin-top: -20px;
-}
-.box-card2 {
-  width: 800px;
-  height: 360px;
-  border-radius: 8px;
-  margin-top: -20px;
-}
-.divider {
-  width: 50%;
-}
-#CT {
+.body2{
   display: flex;
-  height: 100%;
-  width: 70%;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 0 auto;
-  margin-right: 0px;
-  max-width: 1200px;
-  /* background-color: RGB(239, 249, 251); */
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04); */
+  flex-direction: row;
+  justify-content: space-around;
 }
-#CT_image_1 {
-  width: 90%;
-  height: 40%;
-  /* background-color: RGB(239, 249, 251); */
-  margin: 0px auto;
-  padding: 0px;
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04); */
-  margin-right: 180px;
-  margin-bottom: 0px;
-  left:0px;
-  border-radius: 4px;
+.body1{
+  display: flex;
+  flex-wrap: wrap;//允许换行排列
+  flex-direction: row;
+  justify-content: space-around;
 }
-#CT_image {
-  margin-bottom: 60px;
-  margin-left: 30px;
-  margin-top: 5px;
+.demo-image__preview {
+  width: 130px;
+  height: 130px;
+  top: 120px;
+  float: left;
+}
+.main{
+  display: flex;
+  flex-wrap: wrap;//允许换行排列
+  flex-direction: column;
+  justify-content: space-around;
 }
 .image_1 {
   width: 130px;
   height: 130px;
   background: #ffffff;
   top:40px;
-  position: absolute;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.09);
 }
 .info_1 {
@@ -749,274 +709,11 @@ export default {
   background-color: #ffffff;
   line-height: 30px;
 }
-
-.demo-image__preview1 {
-  width: 130px;
-  height: 130px;
-  margin-left: 30px;
-  top: 120px;
-  position: absolute;
-  float: left;
-}
-.demo-image__preview2 {
-  width: 130px;
-  height: 130px;
-  margin-left: 180px;
-  top: 120px;
-  position: absolute;
-  /* background-color: green; */
-}
-.demo-image__preview3 {
-  width: 130px;
-  height: 130px;
-  margin-left: 330px;
-  top: 120px;
-  position: absolute;
-  /* background-color: green; */
-}
-.demo-image__preview4 {
-  width: 130px;
-  height: 130px;
-  margin-left: 480px;
-  top: 120px;
-  position: absolute;
-  /* background-color: green; */
-}
-.demo-image__preview5 {
-  width: 130px;
-  height: 130px;
-  margin-left: 630px;
-  top: 120px;
-  position: absolute;
-  /* background-color: green; */
-}
-.demo1 {
-  width: 240px;
-  height: 300px;
-  margin-left: 20px;
-  margin-top: 0px;
-  position: absolute;
-  float: left;
-}
-.demo2 {
-  width: 130px;
-  height: 130px;
-  margin-left: 180px;
-  margin-top: 0px;
-  position: absolute;
-  /* background-color: green; */
-}
-.demo3 {
-  width: 130px;
-  height: 130px;
-  margin-left: 330px;
-  margin-top: 0px;
-  position: absolute;
-  /* background-color: green; */
-}
-.demo4 {
-  width: 130px;
-  height: 130px;
-  margin-left: 480px;
-  margin-top: 0px;
-  position: absolute;
-  /* background-color: green; */
-}
-.demo5 {
-  width: 130px;
-  height: 130px;
-  margin-left: 630px;
-  margin-top: 0px;
-  position: absolute;
-  /* background-color: green; */
-}
-.st {
-  margin-left: 350px;
-  margin-top: 0px;
-  width:260px;
-  position: absolute;
-  float: left;
-  background: #ffffff;
-}
-.num {
-  margin-left: 330px;
-  margin-top: 180px;
-  position: absolute;
-  float: left;
-  background: #ffffff;
-}
-.st1 {
-  width: 130px;
-  height: 130px;
-  margin-left: 30px;
-  margin-top: 150px;
-  position: absolute;
-  float: left;
-}
-.st2 {
-  width: 130px;
-  height: 130px;
-  margin-left: 180px;
-  margin-top: 150px;
-  position: absolute;
-  /* background-color: green; */
-}
-.st3 {
-  width: 130px;
-  height: 130px;
-  margin-left: 330px;
-  margin-top: 150px;
-  position: absolute;
-  /* background-color: green; */
-}
-.st4 {
-  width: 130px;
-  height: 130px;
-  margin-left: 480px;
-  margin-top: 150px;
-  position: absolute;
-  /* background-color: green; */
-}
-.st5 {
-  width: 130px;
-  height: 130px;
-  margin-left: 630px;
-  margin-top:150px;
-  position: absolute;
-  /* background-color: green; */
-}
-.error {
-  margin: 100px 50px auto;
-  width: 50%;
-  padding: 10px;
-  text-align: center;
-}
-.block-sidebar {
-  position: fixed;
-  display: none;
-  left: 50%;
-  margin-left: 600px;
-  top: 350px;
-  width: 60px;
-  z-index: 99;
-}
-.block-sidebar .block-sidebar-item {
-  font-size: 50px;
-  color: lightblue;
-  text-align: center;
-  line-height: 50px;
-  margin-bottom: 20px;
-  cursor: pointer;
-  display: block;
-}
-div {
-  display: block;
-}
-.block-sidebar .block-sidebar-item:hover {
-  color: #187aab;
-}
-.download_bt {
-  padding: 10px 16px !important;
-}
-#upfile {
-  width: 104px;
-  height: 45px;
-  background-color: #187aab;
-  color: #fff;
-  text-align: center;
-  line-height: 45px;
-  border-radius: 3px;
-  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.2);
-  color: #fff;
-  font-family: "Source Sans Pro", Verdana, sans-serif;
-  font-size: 0.875rem;
-}
-.file {
-  width: 200px;
-  height: 130px;
-  position: absolute;
-  left: -20px;
-  top: 0;
-  z-index: 1;
-  -moz-opacity: 0;
-  -ms-opacity: 0;
-  -webkit-opacity: 0;
-  opacity: 0; /*css属性&mdash;&mdash;opcity不透明度，取值0-1*/
-  filter: alpha(opacity=0);
-  cursor: pointer;
-}
-#upload {
-  position: relative;
-  margin: 0px 0px;
-}
-#download {
-  padding: 0px;
-  margin: 0px 0px;
-}
-.patient {
-  margin: 50px auto;
-  margin-bottom: 100px;
-  /* margin-right: 100px; */
-  background-color: #187aab;
-  border-radius: 5px;
-  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.2);
-  color: #fff;
-  font-family: "Source Sans Pro", Verdana, sans-serif;
-  font-size: 0.875rem;
-  line-height: 1;
-  padding: 0.75rem 1.5rem;
-}
-#Content {
-  width: 85%;
-  height: 800px;
-  background-color: #ffffff;
-  margin: 15px auto;
+.dashboard {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC,
+  Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
+  sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
   display: flex;
-  min-width: 1200px;
-  /* border: 1px solid #e4e7ed; */
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04); */
-}
-#base {
-  width: 80%;
-  background-color: #ffffff;
-  padding: 30px;
-  margin-right: 80px;
-  /* background-color: RGB(239, 249, 251); */
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04); */
-  height: 900px;
-  display: flex;
-  flex-direction:column;
-}
-#aside {
-  width: 20%;
-  background-color: #ffffff;
-  padding: 30px;
-  margin-right: 80px;
-  /* background-color: RGB(239, 249, 251); */
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04); */
-  height: 900px;
-}
-#content {
-  width: 85%;
-  height: 800px;
-  background-color: #ffffff;
-  margin: 15px auto;
-  display: flex;
-  min-width: 1200px;
-  /* border: 1px solid #e4e7ed; */
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04); */
-}
-.download_bt {
-  padding: 10px 16px !important;
-}
-.steps {
-  font-family: "lucida grande", "lucida sans unicode", lucida, helvetica,
-  "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
-  color: #21b3b9;
-  text-align: center;
-  margin: 15px auto;
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
+  flex-direction: row;
 }
 </style>

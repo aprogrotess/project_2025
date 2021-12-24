@@ -11,7 +11,7 @@
         :total="3">
       </el-pagination>
       <div slot="title" class="header-title">
-        <img :src="require('@/assets/images/img_1.png')" style=" display: inline-block;
+        <img :src="require('@/assets/images/imed_h.png')" style=" display: inline-block;
           height: auto;
           max-width: 100%;">
         <span>{{title}}</span>
@@ -56,84 +56,13 @@
             </el-button>
           </div>
           <el-row class="body1" :span="12" >
-              <div class="demo-image__preview">
-                <el-image
-                  :src="rurl[0]"
-                  class="image_1"
-                  style="border-radius: 3px 3px 0 0;
-                    "
-                  :preview-src-list = "[rurl[0]]"
-                >
-                  <div slot="error">
-                    <div slot="placeholder" class="error"></div>
-                  </div>
-                </el-image>
-                <div class="info_1">
-                  <span style="color: black; letter-spacing: 4px"
-                  >患者一</span
-                  >
-                </div>
-              </div>
-              <div class="demo-image__preview">
-                <el-image
-                  :src="rurl[1]"
-                  class="image_1"
-                  style="border-radius: 3px 3px 0 0;
-                    "
-                  :preview-src-list = "[rurl[1]]"
-                >
-                  <div slot="error">
-                    <div slot="placeholder" class="error"></div>
-                  </div>
-                </el-image>
-                <div class="info_1">
-                  <span style="color: black; letter-spacing: 4px"
-                  >患者二</span
-                  >
-                </div>
-              </div>
-              <div class="demo-image__preview">
-                <el-image
-                  :src="rurl[2]"
-                  class="image_1"
-                  style="border-radius: 3px 3px 0 0;
-                    "
-                  :preview-src-list = "[rurl[2]]"
-                ><div slot="error">
-                  <div slot="placeholder" class="error"></div>
-                </div>
-                </el-image>
-                <div class="info_1">
-                  <span style="color: black; letter-spacing: 4px"
-                  >患者三</span
-                  >
-                </div>
-              </div>
-              <div class="demo-image__preview">
-                <el-image
-                  :src="rurl[3]"
-                  class="image_1"
-                  style="border-radius: 3px 3px 0 0;
-                    "
-                  :preview-src-list = "[rurl[3]]"
-                >
-                  <div slot="error">
-                    <div slot="placeholder" class="error"></div>
-                  </div>
-                </el-image>
-                <div class="info_1">
-                  <span style="color: black; letter-spacing: 4px"
-                  >患者四</span
-                  >
-                </div>
-              </div>
-              <div class="demo-image__preview">
+            <div class="demo-image__preview">
               <el-image
-                :src="rurl[4]"
+                :src="rurl[0]"
                 class="image_1"
                 style="border-radius: 3px 3px 0 0;
                   "
-                :preview-src-list = "[rurl[4]]"
+                :preview-src-list = "[rurl[0]]"
               >
                 <div slot="error">
                   <div slot="placeholder" class="error"></div>
@@ -141,10 +70,81 @@
               </el-image>
               <div class="info_1">
                 <span style="color: black; letter-spacing: 4px"
-                >患者五</span
+                >患者一</span
                 >
               </div>
             </div>
+            <div class="demo-image__preview">
+              <el-image
+                :src="rurl[1]"
+                class="image_1"
+                style="border-radius: 3px 3px 0 0;
+                  "
+                :preview-src-list = "[rurl[1]]"
+              >
+                <div slot="error">
+                  <div slot="placeholder" class="error"></div>
+                </div>
+              </el-image>
+              <div class="info_1">
+                <span style="color: black; letter-spacing: 4px"
+                >患者二</span
+                >
+              </div>
+            </div>
+            <div class="demo-image__preview">
+              <el-image
+                :src="rurl[2]"
+                class="image_1"
+                style="border-radius: 3px 3px 0 0;
+                  "
+                :preview-src-list = "[rurl[2]]"
+              ><div slot="error">
+                <div slot="placeholder" class="error"></div>
+              </div>
+              </el-image>
+              <div class="info_1">
+                <span style="color: black; letter-spacing: 4px"
+                >患者三</span
+                >
+              </div>
+            </div>
+            <div class="demo-image__preview">
+              <el-image
+                :src="rurl[3]"
+                class="image_1"
+                style="border-radius: 3px 3px 0 0;
+                  "
+                :preview-src-list = "[rurl[3]]"
+              >
+                <div slot="error">
+                  <div slot="placeholder" class="error"></div>
+                </div>
+              </el-image>
+              <div class="info_1">
+                <span style="color: black; letter-spacing: 4px"
+                >患者四</span
+                >
+              </div>
+            </div>
+            <div class="demo-image__preview">
+            <el-image
+              :src="rurl[4]"
+              class="image_1"
+              style="border-radius: 3px 3px 0 0;
+                "
+              :preview-src-list = "[rurl[4]]"
+            >
+              <div slot="error">
+                <div slot="placeholder" class="error"></div>
+              </div>
+            </el-image>
+            <div class="info_1">
+              <span style="color: black; letter-spacing: 4px"
+              >患者五</span
+              >
+            </div>
+          </div>
           </el-row>
         </el-card>
       </el-col>
@@ -314,6 +314,8 @@ export default {
   },
   activated () {
     this.init()
+    this.drawprob()
+    this.drawnum()
   },
   mounted () {
     // 在mounted生命周期或方法中执行下述代码
@@ -660,7 +662,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .body2{
   display: flex;
