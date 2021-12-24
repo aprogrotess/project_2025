@@ -63,13 +63,7 @@
             </el-col>
             <el-col :span="6">
               <div class="chart-item-warpper">
-                <ve-histogram
-                  height="200px"
-                  :extend="pageviewChartExtend"
-                  :data="visitsChartData"
-                  :settings="chartSettings"
-                  :loading="loading"
-                ></ve-histogram>
+                <ve-histogram :data="chartData"></ve-histogram>
               </div>
               <p class="chart-item-value text-c">
                 <cc-count-to

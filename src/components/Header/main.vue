@@ -9,11 +9,7 @@
     </div>
 
     <div style="text-align: center;" >
-    <img :src="require('@/assets/images/cx.png')" style=" display: inline-block;
-          height: 100%;
-          display: table-cell; //主要是这个属性
-         vertical-align: middle;
-         ">
+
     </div>
     <div class="header-right">
       <div class="icon-items">
