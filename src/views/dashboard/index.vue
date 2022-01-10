@@ -63,7 +63,13 @@
             </el-col>
             <el-col :span="6">
               <div class="chart-item-warpper">
-                <ve-histogram :data="chartData"></ve-histogram>
+                <ve-histogram
+                  height="200px"
+                  :extend="pageviewChartExtend"
+                  :data="visitsChartData"
+                  :settings="chartSettings"
+                  :loading="loading"
+                ></ve-histogram>
               </div>
               <p class="chart-item-value text-c">
                 <cc-count-to
@@ -487,8 +493,8 @@ export default {
 @import "~styles/common.scss";
 .dashboard {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC,
-    Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
-    sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
+  sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
   padding-bottom: 20px;
   .server-status-list {
     h3 {

@@ -8,7 +8,7 @@
           <p class="product-info__outline">基于眼底彩照</p>
           <div>
             <span class="num">1</span>
-            糖尿病视网膜病变分级和病灶检测
+            糖尿病视网膜病变分级和病灶检测统计分析
           </div>
           <div>
             <span class="num">2</span>

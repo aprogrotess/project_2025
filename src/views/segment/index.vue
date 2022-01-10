@@ -1,46 +1,75 @@
+//糖网眼底彩照辅助诊断系统
 <template>
   <div class="seg">
     <el-row class="image_row">
       <el-col class="col">
         <el-card class="line1" flex:4>
           <div slot="header" class="clearfix">
-            <span class="steps" style="letter-spacing: 7px">图源</span>
+            <span class="steps" >图源</span>
           </div>
           <el-row class="body"  >
             <el-col class="dd">
               <div class="demo-image__preview">
                 <el-image
-                  :src="url_test"
+                  :src="url_raw"
                   class="image_1"
-                  style="border-radius: 3px 3px 0 0;
-                      "
-                  :preview-src-list = "[url_test]"
+                  style="border-radius: 3px 3px 0 0;"
+                  :preview-src-list = "[url_raw]"
+                  fit
                 >
                   <div slot="error">
-                    <div slot="placeholder" class="error"></div>
+                    <div slot="placeholder" class="error">
+                      <el-button
+                        v-show=true
+                        type="primary"
+                        class="download_bt"
+                        icon="el-icon-upload"
+                        v-on:click="true_upload1"
+                      >
+                        上传图片
+                        <input
+                          ref="upload"
+                          style="display: none"
+                          accept="image/png,image/gif,image/jpeg"
+                          name="file"
+                          type="file"
+                          @change="update"
+                        />
+                      </el-button>
+                    </div>
                   </div>
                 </el-image>
               </div>
               <div class="info_1">
-                    <span style="color:white; letter-spacing: 4px; padding-bottom: 0"
-                    >原始图片</span
-                    >
+                <span style="color:white; letter-spacing: 4px; padding-bottom: 0"
+                >原始图片</span>
               </div>
             </el-col>
             <el-col class="dd">
               <div class="demo-image__preview">
                 <el-image
-                  :src="url_test"
+                  :src="url_enh"
                   class="image_1"
-                  style="border-radius: 3px 3px 0 0;
-                      "
-                  :preview-src-list = "[url_test]"
+                  style="border-radius: 3px 3px 0 0;"
+                  :preview-src-list = "[url_enh]"
+                  fit="contain"
                 >
                   <div slot="error">
-                    <div slot="placeholder" class="error"></div>
+                    <div slot="placeholder" class="error">
+                      <el-button
+                        style=""
+                        v-show=true
+                        type="primary"
+                        :loading="load"
+                        class="download_bt"
+                        icon="el-icon-caret-right"
+                        v-on:click="enh"
+                      >
+                        增强图像
+                      </el-button>
+                    </div>
                   </div>
                 </el-image>
-
               </div>
               <div class="info_1">
                   <span style="color: white; letter-spacing: 4px; padding-bottom: 0"
@@ -53,21 +82,35 @@
       </el-col>
       <el-col class="col">
         <el-card class="line2" flex:4>
-          <div slot="header" class="clearfix">
+          <div slot="header" class="clearfix2" >
             <span class="steps" style="letter-spacing: 7px">处理结果</span>
+            <el-select v-model="radio" style="" placeholder="请选择">
+              <el-option label="增强前" value="1"></el-option>
+              <el-option label="增强后" value="2"></el-option>
+            </el-select>
           </div>
-          <el-row class="body"  >
+          <el-row class="body">
             <el-col class="dd">
               <div class="demo-image__preview">
                 <el-image
-                  :src="url_test"
+                  :src="url_ves[link_dic[radio]]"
                   class="image_1"
-                  style="border-radius: 3px 3px 0 0;
-                      "
-                  :preview-src-list = "[url_test]"
+                  style="border-radius: 3px 3px 0 0;"
+                  :preview-src-list = "url_ves"
                 >
                   <div slot="error">
-                    <div slot="placeholder" class="error"></div>
+                    <div slot="placeholder" class="error">
+                      <el-button
+                        v-show=true
+                        type="primary"
+                        :loading="load"
+                        icon="el-icon-caret-right"
+                        class="download_bt"
+                        v-on:click="vessel_run"
+                      >
+                        运行模型
+                      </el-button>
+                    </div>
                   </div>
                 </el-image>
               </div>
@@ -80,21 +123,20 @@
             <el-col class="dd">
               <div class="demo-image__preview">
                 <el-image
-                  :src="url_test"
+                  :src="url_ss[link_dic[radio]]"
                   class="image_1"
                   style="border-radius: 3px 3px 0 0;
                       "
-                  :preview-src-list = "[url_test]"
+                  :preview-src-list = "url_ss"
                 >
                   <div slot="error">
                     <div slot="placeholder" class="error"></div>
                   </div>
                 </el-image>
-
               </div>
               <div class="info_1">
-                  <span style="color: white; letter-spacing: 4px; padding-bottom: 0"
-                  >分类叠加图</span>
+                <span style="color: white; letter-spacing: 4px; padding-bottom: 0"
+                >分类叠加图</span>
               </div>
             </el-col>
           </el-row>
@@ -105,82 +147,113 @@
       <el-col class="col2">
         <el-card class="line1">
           <div slot="header" class="clearfix">
-            <span class="steps" style="letter-spacing: 7px">结果二</span>
+            <span class="steps" style="letter-spacing: 7px">病灶分析结果与统计分析</span>
+            <el-button
+              style=""
+              v-show=true
+              type="primary"
+              :loading="load"
+              class="download_bt"
+              icon="el-icon-caret-right"
+              v-on:click="dr"
+            >
+              病灶分割
+            </el-button>
           </div>
           <el-row class="body">
-            <el-col class="dd2">
-              <el-row class="pic">
-                <div class="demo-image__preview">
-                  <el-image
-                    :src="url_test"
-                    class="image_1"
-                    style="border-radius: 3px 3px 0 0;
-                        "
-                    :preview-src-list = "[url_test]"
-                  >
-                    <div slot="error">
-                      <div slot="placeholder" class="error"></div>
-                    </div>
-                  </el-image>
-                </div>
-                <div class="info_1">
-                      <span style="color:white; letter-spacing: 4px; padding-bottom: 0"
-                      >原始图片</span
-                      >
-                </div>
-              </el-row>
-              <el-row class="pic">
-                <div class="demo-image__preview">
-                  <el-image
-                    :src="url_test"
-                    class="image_1"
-                    style="border-radius: 3px 3px 0 0;
-                      "
-                    :preview-src-list = "[url_test]"
-                  >
-                    <div slot="error">
-                      <div slot="placeholder" class="error"></div>
-                    </div>
-                  </el-image>
-                </div>
-                <div class="info_1">
-                  <span style="color: white; letter-spacing: 4px; padding-bottom: 0"
-                  >增强图片</span
-                  >
-                </div>
-              </el-row>
+            <el-col class="pic">
+              <div class="o-image__preview">
+                <el-image
+                  :src="url_dr_raw"
+                  class="image_1"
+                  style="border-radius: 3px 3px 0 0;"
+                  :preview-src-list = "[url_dr_raw]"
+                >
+                  <div slot="error">
+                    <div slot="placeholder" class="error"></div>
+                  </div>
+                </el-image>
+              </div>
+              <div class="info_2">
+                    <span style="color:white; letter-spacing: 4px; padding-bottom: 0"
+                    >原始图片</span
+                    >
+              </div>
             </el-col>
-            <el-col class="table">
-              <el-table
-                :data="feature_list"
-                border
-                style=" text-align: center"
-                v-loading="loading"
-                element-loading-text="数据正在处理中，请耐心等待"
-                element-loading-spinner="el-icon-loading"
-                lazy
-              >
-                <el-table-column prop="1" label="Feature">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row[2] }}</span>
-                  </template>
-                </el-table-column>
-                <!-- 特征名 -->
-                <el-table-column prop="2" label="特征名">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row[0] }}</span>
-                  </template>
-                </el-table-column>
-                <!-- 特征值 -->
-                <el-table-column prop="3" label="特征值">
-                  <template slot-scope="scope">
-                    <span>{{ scope.row[1] }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
+            <el-col class="pic">
+              <div class="o-image__preview">
+                <el-image
+                  :src="url_dr_enh"
+                  class="image_1"
+                  style="border-radius: 3px 3px 0 0;
+                    "
+                  :preview-src-list = "[url_dr_enh]"
+                >
+                  <div slot="error">
+                    <div slot="placeholder" class="error"></div>
+                  </div>
+                </el-image>
+              </div>
+              <div class="info_2">
+                <span style="color: white; letter-spacing: 4px; padding-bottom: 0"
+                >增强图片</span
+                >
+              </div>
             </el-col>
-            <el-col class="charts">
-              <ve-histogram :title="title" :data="data"></ve-histogram>
+            <el-col class="tc">
+              <el-row class="table">
+                <el-table
+                  :data="feature_list"
+                  border
+                  style=" text-align: center"
+                  v-loading="loading"
+                  element-loading-text="数据正在处理中，请耐心等待"
+                  element-loading-spinner="el-icon-loading"
+                  lazy
+                >
+                  //绿色表示相同，红色表示相异
+                  <el-table-column prop="2" label="增强状态">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row[0] }}</span>
+                    </template>
+                  </el-table-column>
+                  <!-- 特征名 -->
+                  <!-- 特征值 -->
+                  <el-table-column prop="3" label="正常概率">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row[1] }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="3" label="一级概率">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row[2] }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="3" label="二级概率">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row[3] }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="3" label="三级概率">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row[4] }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="3" label="增殖概率">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row[5] }}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-row>
+              <el-row class="charts">
+                <el-col class="chart">
+                  <ve-histogram :data="areaData" height="250px"></ve-histogram>
+                </el-col>
+                <el-col class="chart">
+                  <ve-histogram :data="numData" height="250px"></ve-histogram>
+                </el-col>
+              </el-row>
             </el-col>
           </el-row>
         </el-card>
@@ -189,201 +262,130 @@
   </div>
 </template>
 <script>
-import VeLine from 'v-charts/lib/line.common'
-import VeRing from 'v-charts/lib/ring.common'
 import VeHistogram from 'v-charts/lib/histogram.common'
-
 import Vue from 'vue'
+import Plugin from 'v-fit-columns'
+import axios from 'axios'
 
-import { registerAllModules } from 'handsontable/registry';
-registerAllModules();
-import Plugin from 'v-fit-columns';
-Vue.use(Plugin);
-Vue.component(VeLine.name, VeLine)
-Vue.component(VeRing.name, VeRing)
+// 引入柱状图组件
+require('echarts/lib/chart/line')
+// 引入提示框和title组件
+require('echarts/lib/component/tooltip')
+require('echarts/lib/component/title')
+
+Vue.use(Plugin)
 Vue.component(VeHistogram.name, VeHistogram)
 export default {
   data () {
     return {
-      props: {
-        tripe: true,
-        border: true,
-        showHeader: true,
-        showSummary: false,
-        showRowHover: true,
-        showIndex: false,
-        treeType: true,
-        isFold: true,
-        expandType: false,
-        selectionType: false,
-        stripe: false
+
+      // button loading属性
+      ves_load: false,
+      enh_load: false,
+      dr_load: false,
+      load: false,
+      // url part
+      url_raw: '',
+      url_enh: '',
+      url_ves: ['', ''], // 分割叠加
+      url_ss: ['', ''], // 分类叠加
+      url_dr_enh: '',
+      url_dr_raw: '',
+      url_test: 'https://imagej.net/media/plugins/vessel-analysis-rgb.png',
+      server_url: 'http://127.0.0.1:5000',
+      // name
+      radio: '1',
+      tmp: '上传图片',
+      link_dic: {
+        '1': 0,
+        '2': 1
       },
-      data:{
-        columns:['姓名', '资产'],
-        rows:[{'姓名':'蛋尼', '资产':20},
-          {'姓名':'张飞', '资产':30},
-          {'姓名':'关羽', '资产':40},
-          {'姓名':'刘备', '资产':60},
-          {'姓名':'尼古拉斯', '资产':26},]
-      },
-      title:{
-        text: '个人资产',
-        textStyle: {color:'darkgray'}
-      },
-      columns: [
-        {
-          title: 'name',
-          key: 'name',
-          width: '400px'
-        },
-        {
-          title: 'sex',
-          key: 'sex',
-          minWidth: '50px'
-        },
-        {
-          title: 'score',
-          key: 'score'
-        },
-        {
-          title: 'likes',
-          key: 'likes',
-          minWidth: '200px',
-          type: 'template',
-          template: 'likes'
-        }
-      ],
-      headers: [
-        {
-          text: 'Dessert (100g serving)',
-          align: 'start',
-          sortable: false,
-          value: 'name',
-        },
-        { text: 'Calories', value: 'calories' },
-        { text: 'Fat (g)', value: 'fat' },
-        { text: 'Carbs (g)', value: 'carbs' },
-        { text: 'Protein (g)', value: 'protein' },
-        { text: 'Iron (%)', value: 'iron' },
-      ],
-      desserts: [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: '1%',
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: '1%',
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: '7%',
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: '8%',
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: '16%',
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: '0%',
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: '2%',
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: '45%',
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: '22%',
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: '6%',
-        },
-      ],
-      chartData: {
-        columns: ['日期', '访问用户', '下单用户', '下单率'],
+      // chart/table
+      feature_list: [],
+      areaData: {
+        columns: ['种类', '增强前面积', '增强后面积'],
         rows: [
-          { '日期': '1/1', '访问用户': 1393, '下单用户': 1093, '下单率': 0.32 },
-          { '日期': '1/2', '访问用户': 3530, '下单用户': 3230, '下单率': 0.26 },
-          { '日期': '1/3', '访问用户': 2923, '下单用户': 2623, '下单率': 0.76 },
-          { '日期': '1/4', '访问用户': 1723, '下单用户': 1423, '下单率': 0.49 },
-          { '日期': '1/5', '访问用户': 3792, '下单用户': 3492, '下单率': 0.323 },
-          { '日期': '1/6', '访问用户': 4593, '下单用户': 4293, '下单率': 0.78 }
+          { '种类': '微血管瘤', '增强前面积': 0, '增强后面积': 0 },
+          { '种类': '硬性渗出', '增强前面积': 0, '增强后面积': 0 },
+          { '种类': '出血', '增强前面积': 0, '增强后面积': 0 },
+          { '种类': '棉絮斑', '增强前面积': 0, '增强后面积': 0 }
         ]
       },
-      probl: [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]],
-      numl: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-      weightl:w [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-      radio: 'normal',
-      tmp: '上传图片',
-      rurl: ['', '', '', '', ''],
-      link_dic: {
-        'normal': 0,
-        'first': 1,
-        'second': 2,
-        'third': 3,
-        'forth': 4
-      },
-      url_test: 'https://imagej.net/media/plugins/vessel-analysis-rgb.png'
+      numData: {
+        columns: ['种类', '增强前数量', '增强后数量'],
+        rows: [
+          { '种类': '微血管瘤', '增强前数量': 0, '增强后数量': 0 },
+          { '种类': '硬性渗出', '增强前数量': 0, '增强后数量': 0 },
+          { '种类': '出血', '增强前数量': 0, '增强后数量': 0 },
+          { '种类': '棉絮斑', '增强前数量': 0, '增强后数量': 0 }
+        ]
+      }
     }
   },
   activated () {
     this.init()
   },
   mounted () {
+    this.init()
     // 在mounted生命周期或方法中执行下述代码
     this.drawprob()
     this.drawnum()
   },
   methods: {
+    dr () {
+      this.load = true
+      let param = new FormData()
+      console.log('ill')
+      let config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }
+      axios
+        .post('http://127.0.0.1:5000/seg/ill', param, config)
+        .then(
+          res => {
+            this.url_dr_raw = 'http://127.0.0.1:5000/tmp/seg/dr_r.png'
+            this.url_dr_enh = 'http://127.0.0.1:5000/tmp/seg/dr_e.png'
+            this.load = false
+            this.feature_list = [['增强前', res.data.prob_r[0], res.data.prob_r[1], res.data.prob_r[2], res.data.prob_r[3], res.data.prob_r[4]],
+              ['增强后', res.data.prob_e[0], res.data.prob_e[1], res.data.prob_e[2], res.data.prob_e[3], res.data.prob_e[4]]]
+            this.areaData = {
+              columns: ['种类', '增强前面积', '增强后面积'],
+              rows: [
+                { '种类': '微血管瘤', '增强前面积': res.data.weight_r[0], '增强后面积': res.data.weight_e[0] },
+                { '种类': '硬性渗出', '增强前面积': res.data.weight_r[1], '增强后面积': res.data.weight_e[1] },
+                { '种类': '出血', '增强前面积': res.data.weight_r[2], '增强后面积': res.data.weight_e[2] },
+                { '种类': '棉絮斑', '增强前面积': res.data.weight_r[3], '增强后面积': res.data.weight_e[3] }
+              ]
+            }
+
+            this.numData = {
+              columns: ['种类', '增强前数量', '增强后数量'],
+              rows: [
+                { '种类': '微血管瘤', '增强前数量': res.data.count_r[0], '增强后数量': res.data.count_e[0] },
+                { '种类': '硬性渗出', '增强前数量': res.data.count_r[1], '增强后数量': res.data.count_e[1] },
+                { '种类': '出血', '增强前数量': res.data.count_r[2], '增强后数量': res.data.count_e[2] },
+                { '种类': '棉絮斑', '增强前数量': res.data.count_r[3], '增强后数量': res.data.count_e[3] }
+              ]
+            }
+          }
+        )
+    },
+    enh () {
+      this.load = true
+      let param = new FormData()
+      console.log('enhance')
+      let config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }
+      axios
+        .post('http://127.0.0.1:5000/seg/enh', param, config)
+        .then(
+          res => {
+            this.url_enh = 'http://127.0.0.1:5000/tmp/seg/enh.png'
+            this.load = false
+          }
+        )
+    },
     drawprob () {
       let prob = this.$echarts.init(document.getElementById('prob'))
       // 绘制图表
@@ -548,16 +550,62 @@ export default {
       num.resize()
       num.setOption(option_num, true)
       console.log('num_painted')
+    },
+    true_upload1 () {
+      this.$refs.upload.click()
+    },
+    update (e) {
+      let file = e.target.files[0]
+      let param = new FormData()
+      param.append('file', file, file.name)
+      // FormData私有类对象，访问不到，可以通过get判断值是否传进去
+      console.log(param.get('file'))
+      let config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }
+      axios
+        .post('http://127.0.0.1:5000/upload/seg', param, config)
+        .then(
+          res => {
+            this.url_raw = 'http://127.0.0.1:5000/tmp/seg/raw.png'
+            console.log(this.url_raw)
+          }
+        )
+    },
+    vessel_run () {
+      this.load = true
+      let param = new FormData()
+      console.log('enhance')
+      let config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }
+      axios
+        .post('http://127.0.0.1:5000/seg/vessel', param, config)
+        .then(
+          res => {
+            this.url_ves = ['http://127.0.0.1:5000/tmp/seg/raw_seg.png', 'http://127.0.0.1:5000/tmp/seg/enh_seg.png']
+            this.url_ss = ['http://127.0.0.1:5000/tmp/seg/raw_ater.png', 'http://127.0.0.1:5000/tmp/seg/enh_ater.png']
+            this.load = false
+          }
+        )
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 @import '~styles/common.scss';
-.pic{
+.clearfix {
+  height: 30px;
+}
+.error {
+}
+.clearfix2 {
+  height: 30px;
+  align-items:center;
   display: flex;
-  flex-direction:column;
-  margin-bottom: 6%;
+  flex-direction:row;
+  flex-wrap: nowrap;
+  justify-content:space-around;
 }
 .seg{
   display: flex;
@@ -598,12 +646,10 @@ export default {
 }
 .dd2{
   display: flex;
-  flex-direction:column;
-  flex-basis: 55%;
+  flex-direction:row;
+  flex-basis: 100%;
+  align-items:center;
   margin-left: 5%;
-}
-.table{
-  flex-basis: 80%;
 }
 .body{
   display: flex;
@@ -621,7 +667,7 @@ export default {
   align-content: center;
 }
 .demo-image__preview {
-  width: 60%;
+  width: 80%;
   aspect-ratio: 1 / 1;
   float: left;
   text-align: center;
@@ -630,16 +676,14 @@ export default {
   flex-direction:column;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.09);
 }
-.image_1 {
-  background: #ffffff;
-}
 .info_1 {
   text-align: center;
   line-height: 30px;
   background-color: #21b3b9;
-  width:60%
+  width:80%
 }
 .o-image__preview {
+  width: 100%;
   aspect-ratio: 1 / 1;
   float: left;
   text-align: center;
@@ -649,6 +693,7 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.09);
 }
 .info_2 {
+  width: 100%;
   text-align: center;
   line-height: 30px;
   background-color: #21b3b9;
@@ -660,11 +705,37 @@ export default {
   text-align: center;
   font-weight: bold;
 }
+.image_1 {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #ffffff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.09);
+  display: flex;
+  justify-content: center;
+  align-items:center;
+}
+.table {
+  flex-basis: 30%;
+}
 .charts {
-  flex-basis: 80%;
-  align-content: center;
+
+  display: flex;
+  flex-direction:row;
+  justify-content: center; /* 水平居中 */
+}
+.chart {
+
+}
+.tc{
   display: flex;
   flex-direction:column;
   justify-content: center; /* 水平居中 */
+  flex-basis: 50%;
+}
+.pic{
+  flex-basis: 21%;
+  display: flex;
+  flex-direction:column;
+  margin-right: 3%;
 }
 </style>

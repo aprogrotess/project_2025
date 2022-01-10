@@ -1,366 +1,454 @@
+//眼底彩照辅助诊断系统
 <template>
-  <div class="dashboard" >
-    <el-dialog width="30%" :visible.sync="dialogVisible" :before-close="handleClose" :title="title">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page.sync="currentPage1"
-        :page-size="1"
-        style="text-align:center;"
-        layout=" prev, pager, next"
-        :total="3">
-      </el-pagination>
-      <div slot="title" class="header-title">
-        <img :src="require('@/assets/images/img_1.png')" style=" display: inline-block;
-          height: auto;
-          max-width: 100%;">
-        <span>{{title}}</span>
-      </div>
-      <page1 v-show="currentPage1===1"></page1>
-      <page2 v-show="currentPage1===2"></page2>
-      <page3 v-show="currentPage1===3"></page3>
-    </el-dialog>
-    <el-dialog width="30%" :visible.sync="diag2_visible" :before-close="handleClose">
-      <p style="text-align: center">完成运行</p>
-    </el-dialog>
-    <el-row class="main" style="flex:7; margin-right: 20px" :gutter="40">
-      <el-col style="flex: 4">
-        <el-card
-          id="CT_image_1"
-          class="box-card1"
-          style="margin-bottom: 20px;height: 400px"
-          :header-style="{
-          height: '60px'
-        }"
-        >
+  <div class="seg">
+    <el-row class="image_row">
+      <el-col class="col">
+        <el-col class="dd">
+          <div class="demo-image__preview">
+            <el-image
+              :src="url_raw"
+              class="image_1"
+              style="border-radius: 3px 3px 0 0;"
+              :preview-src-list = "[url_raw]"
+              fit
+            >
+              <div slot="error">
+                <div slot="placeholder" class="error">
+                  <el-button
+                    v-show=true
+                    type="primary"
+                    class="download_bt"
+                    icon="el-icon-upload"
+                    v-on:click="true_upload1"
+                  >
+                    上传图片
+                    <input
+                      ref="upload"
+                      style="display: none"
+                      accept="image/png,image/gif,image/jpeg"
+                      name="file"
+                      type="file"
+                      @change="update"
+                    />
+                  </el-button>
+                </div>
+              </div>
+            </el-image>
+          </div>
+          <div class="info_1">
+            <span style="color:white; letter-spacing: 4px; padding-bottom: 0"
+            >原始图片</span>
+          </div>
+        </el-col>
+      </el-col>
+      <el-col class="col">
+        <el-col class="dd">
+          <div class="demo-image__preview">
+            <el-image
+              :src="url_enh"
+              class="image_1"
+              style="border-radius: 3px 3px 0 0;"
+              :preview-src-list = "[url_enh]"
+              fit="contain"
+            >
+              <div slot="error">
+                <div slot="placeholder" class="error">
+                  <el-button
+                    style=""
+                    v-show=true
+                    type="primary"
+                    :loading="load"
+                    class="download_bt"
+                    icon="el-icon-caret-right"
+                    v-on:click="enh"
+                  >
+                    增强图像
+                  </el-button>
+                </div>
+              </div>
+            </el-image>
+          </div>
+          <div class="info_1">
+              <span style="color: white; letter-spacing: 4px; padding-bottom: 0"
+              >增强图片</span
+              >
+          </div>
+        </el-col>
+      </el-col>
+    </el-row>
+    <el-row class="stat_row">
+      <el-col class="col2">
+        <el-card class="line1">
           <div slot="header" class="clearfix">
-            <span class="steps" >原始图片</span>
+            <span class="steps" style="letter-spacing: 7px">糖网分割分级</span>
             <el-button
-              style="margin-left: 35px;position: relative;top:0px;left:0px"
+              style=""
               v-show=true
               type="primary"
-              icon="el-icon-upload"
+              :loading="load"
               class="download_bt"
-              v-on:click="true_upload1"
+              icon="el-icon-caret-right"
+              v-on:click="dr"
             >
-              {{tmp}}
-              <input
-                ref="upload"
-                style="display: none"
-                accept="image/png,image/gif,image/jpeg"
-                name="file"
-                type="file"
-                multiple="multiple"
-                @change="update"
-              />
+              病灶分割
             </el-button>
           </div>
-          <el-row class="body1" :span="12" >
-            <div class="demo-image__preview">
-              <el-image
-                :src="rurl[0]"
-                class="image_1"
-                style="border-radius: 3px 3px 0 0;
-                    "
-                :preview-src-list = "[rurl[0]]"
-              >
-                <div slot="error">
-                  <div slot="placeholder" class="error"></div>
-                </div>
-              </el-image>
-              <div class="info_1">
-                  <span style="color: black; letter-spacing: 4px"
-                  >患者一</span
+          <el-row class="dr_body">
+            <el-row class="dr_pic" style="margin-bottom: 6%">
+              <el-col class="pic">
+                <div class="o-image__preview">
+                  <el-image
+                    :src="url_dr_raw"
+                    class="image_1"
+                    style="border-radius: 3px 3px 0 0;"
+                    :preview-src-list = "[url_dr_raw]"
                   >
-              </div>
-            </div>
-            <div class="demo-image__preview">
-              <el-image
-                :src="rurl[1]"
-                class="image_1"
-                style="border-radius: 3px 3px 0 0;
-                    "
-                :preview-src-list = "[rurl[1]]"
-              >
-                <div slot="error">
-                  <div slot="placeholder" class="error"></div>
+                    <div slot="error">
+                      <div slot="placeholder" class="error"></div>
+                    </div>
+                  </el-image>
                 </div>
-              </el-image>
-              <div class="info_1">
-                  <span style="color: black; letter-spacing: 4px"
-                  >患者二</span
-                  >
-              </div>
-            </div>
-            <div class="demo-image__preview">
-              <el-image
-                :src="rurl[2]"
-                class="image_1"
-                style="border-radius: 3px 3px 0 0;
-                    "
-                :preview-src-list = "[rurl[2]]"
-              ><div slot="error">
-                <div slot="placeholder" class="error"></div>
-              </div>
-              </el-image>
-              <div class="info_1">
-                  <span style="color: black; letter-spacing: 4px"
-                  >患者三</span
-                  >
-              </div>
-            </div>
-            <div class="demo-image__preview">
-              <el-image
-                :src="rurl[3]"
-                class="image_1"
-                style="border-radius: 3px 3px 0 0;
-                    "
-                :preview-src-list = "[rurl[3]]"
-              >
-                <div slot="error">
-                  <div slot="placeholder" class="error"></div>
+                <div class="info_2">
+                      <span style="color:white; letter-spacing: 4px; padding-bottom: 0"
+                      >原始图片</span
+                      >
                 </div>
-              </el-image>
-              <div class="info_1">
-                  <span style="color: black; letter-spacing: 4px"
-                  >患者四</span
-                  >
+              </el-col>
+              <el-col class="pic">
+              <div class="o-image__preview">
+                <el-image
+                  :src="url_dr_enh"
+                  class="image_1"
+                  style="border-radius: 3px 3px 0 0;
+                    "
+                  :preview-src-list = "[url_dr_enh]"
+                >
+                  <div slot="error">
+                    <div slot="placeholder" class="error"></div>
+                  </div>
+                </el-image>
               </div>
-            </div>
-            <div class="demo-image__preview">
-              <el-image
-                :src="rurl[4]"
-                class="image_1"
-                style="border-radius: 3px 3px 0 0;
-                  "
-                :preview-src-list = "[rurl[4]]"
-              >
-                <div slot="error">
-                  <div slot="placeholder" class="error"></div>
-                </div>
-              </el-image>
-              <div class="info_1">
-                <span style="color: black; letter-spacing: 4px"
-                >患者五</span
+              <div class="info_2">
+                <span style="color: white; letter-spacing: 4px; padding-bottom: 0"
+                >增强图片</span
                 >
               </div>
-            </div>
+            </el-col>
+            </el-row>
+            <el-row class="table" style="margin-bottom: 10%">
+              <el-table
+                :data="feature_list"
+                border
+                class="table1"
+                :header-cell-style="{'text-align':'center'}"
+                :cell-style="{'text-align':'center'}"
+                v-loading="loading"
+                element-loading-text="数据正在处理中，请耐心等待"
+                element-loading-spinner="el-icon-loading"
+                lazy
+              >
+                //绿色表示相同，红色表示相异
+                <el-table-column prop="2">
+                  <template #header>
+                    <el-input v-model="search" size="small" placeholder="Type to search" />
+                  </template>
+                  <template slot-scope="scope">
+                    <span>{{ scope.row[0] }}</span>
+                  </template>
+                </el-table-column>
+                <!-- 特征名 -->
+                <!-- 特征值 -->
+                <el-table-column prop="3" label="等级">
+                  <template slot-scope="scope">
+                    <span v-if="flag==0" style="color:red;">{{ scope.row[1] }}</span>
+                    <span v-if="flag==1" style="color:green;">{{ scope.row[1] }}</span>
+
+                  </template>
+                </el-table-column>
+                <el-table-column prop="3" label="概率">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row[2] }}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-row>
+            <el-row class="charts" style="margin-bottom: 5%">
+              <el-col class="chart">
+                <ve-histogram :data="areaData" height="250px"></ve-histogram>
+              </el-col>
+              <el-col class="chart">
+                <ve-histogram :data="numData" height="250px"></ve-histogram>
+              </el-col>
+            </el-row>
           </el-row>
         </el-card>
       </el-col>
-      <el-col style="flex: 6">
-        <el-card
-          id="CT_image_2"
-          class="box-card2"
-          style="margin-bottom: 20px;
-          border-radius: 8px;"
-          :header-style="{
-          height: '60px'
-        }"
-        >
+      <el-col class="col2">
+        <el-card class="line1">
           <div slot="header" class="clearfix">
-            <span class="steps" >处理结果</span>
+            <span class="steps" style="letter-spacing: 7px">血管分割结果</span>
             <el-button
-              style="margin-left: 35px;position: relative;top:0px;left:0px"
               v-show=true
               type="primary"
-              :loading="loading_bt"
+              :loading="load"
               icon="el-icon-caret-right"
               class="download_bt"
-              v-on:click="run"
+              v-on:click="vessel_run"
             >
               运行模型
             </el-button>
-            <el-select v-model="radio" style="margin-left:250px; margin-top:-40px; width: 100px" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
           </div>
-          <el-col class="body2"  >
-            <el-row class="demo1">
-              <el-image
-                :src="murl[link_dic[radio]]"
-                class="image_1"
-                style="border-radius: 3px 3px 0 0;
-                  width: 240px;
-                  height: 240px;
-                  "
-                :preview-src-list = "[murl[link_dic[radio]]]"
-                @click.native.stop="click_test()"
-              >
-                <div slot="error">
-                  <div slot="placeholder" class="error"></div>
+          <el-row class="dr_body">
+            <el-row class="seg_pic" style="margin-bottom: 3%">
+              <el-col class="dd">
+                <div class="demo-image__preview">
+                  <el-image
+                    :src="url_ves[link_dic[radio]]"
+                    class="image_1"
+                    style="border-radius: 3px 3px 0 0;"
+                    :preview-src-list = "url_ves"
+                  >
+                    <div slot="error">
+                      <div slot="placeholder" class="error">
+                      </div>
+                    </div>
+                  </el-image>
                 </div>
-              </el-image>
-              <div class="info_2">
-                <span style="color: black; letter-spacing: 4px">病灶分割结果</span>
+                <div class="info_1">
+                      <span style="color: white; letter-spacing: 4px; padding-bottom: 0"
+                      >分割叠加图</span
+                      >
+                </div>
+              </el-col>
+              <el-col class="dd">
+              <div class="demo-image__preview">
+                <el-image
+                  :src="url_ss[link_dic[radio]]"
+                  class="image_1"
+                  style="border-radius: 3px 3px 0 0;
+                      "
+                  :preview-src-list = "url_ss"
+                >
+                  <div slot="error">
+                    <div slot="placeholder" class="error"></div>
+                  </div>
+                </el-image>
               </div>
+              <div class="info_1">
+                <span style="color: white; letter-spacing: 4px; padding-bottom: 0"
+                >分类叠加图</span>
+              </div>
+            </el-col>
             </el-row>
-            <el-row class="charts">
-              <div class="st">
-                <div id="prob" style="width: 420px;
-                 height: 200px;
-                 fontSize:25px;
-                 padding-left:5px" ></div>
-              </div>
-              <div class="num">
-                <div id="num" :style="{width: '425px', height: '200px',fontSize:'25px'}" ></div>
-              </div>
+            <el-row class="seg_pic" style="margin-bottom: 3%">
+              <el-col class="dd">
+                <div class="demo-image__preview">
+                  <el-image
+                    :src="url_ves[link_dic['2']]"
+                    class="image_1"
+                    style="border-radius: 3px 3px 0 0;"
+                    :preview-src-list = "url_ves"
+                  >
+                    <div slot="error">
+                      <div slot="placeholder" class="error">
+                      </div>
+                    </div>
+                  </el-image>
+                </div>
+                <div class="info_1">
+                      <span style="color: white; letter-spacing: 4px; padding-bottom: 0"
+                      >增强后分割叠加图</span
+                      >
+                </div>
+              </el-col>
+              <el-col class="dd">
+                <div class="demo-image__preview">
+                  <el-image
+                    :src="url_ss[link_dic['2']]"
+                    class="image_1"
+                    style="border-radius: 3px 3px 0 0;
+                      "
+                    :preview-src-list = "url_ss"
+                  >
+                    <div slot="error">
+                      <div slot="placeholder" class="error"></div>
+                    </div>
+                  </el-image>
+                </div>
+                <div class="info_1">
+                <span style="color: white; letter-spacing: 4px; padding-bottom: 0"
+                >增强后分类叠加图</span>
+                </div>
+              </el-col>
             </el-row>
-          </el-col>
+            <el-row class="table" style="margin-bottom: 3%">
+              <el-table
+                :data="seg_list"
+                border
+                :header-cell-style="{'text-align':'center'}"
+                :cell-style="{'text-align':'center'}"
+                v-loading="loading"
+                element-loading-text="数据正在处理中，请耐心等待"
+                element-loading-spinner="el-icon-loading"
+                lazy
+              >
+                //绿色表示相同，红色表示相异
+                <el-table-column prop="2" label="特征名">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row[0] }}</span>
+                  </template>
+                </el-table-column>
+                <!-- 特征名 -->
+                <!-- 特征值 -->
+                <el-table-column prop="3" label="特征缩写">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row[1] }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="3" label="特征值">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row[2] }}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-row>
+          </el-row>
         </el-card>
       </el-col>
-    </el-row>
-    <el-row class="side" style="flex:2">
-      <el-card class="box-card"
-               :header-style="{
-            height: '60px'
-          }"
-               style="width: 200px;
-               height:97%"
-      >
-        <div slot="header" class="clearfix">
-          <span>糖网分级详情</span>
-        </div>
-        <div>
-          <p>正常-无明显视网膜病变：眼底无异常</p>
-          <p><br/></p>
-          <p>一级-轻度非增殖期：眼底仅见微动脉瘤</p>
-          <p><br/></p>
-          <p>二级-中度非增殖期：眼底病变介于轻、重度之间</p>
-          <p><br/></p>
-          <p>三级-重度非增殖期：眼底出现以下任一病变，但尚无PDR期表现：1.四个象限任一象限出现多于20处视网膜内出血2.两个象限以上出现明确的静脉串珠样改变3.一个以上象限出现明显的视网膜内微血管异常。</p>
-          <p><br/></p>
-          <p>四级-高度增殖期：眼底出现以下一个或以上改变：1.新生血管生成2.玻璃体内出血/视网膜前出血</p>
-        </div>
-      </el-card>
     </el-row>
   </div>
 </template>
 <script>
+import VeHistogram from 'v-charts/lib/histogram.common'
+import Vue from 'vue'
+import Plugin from 'v-fit-columns'
 import axios from 'axios'
-import Page1 from '@/components/diag/page1'
-import Page2 from '@/components/diag/page2'
-import Page3 from '@/components/diag/page3'
 
-// eslint-disable-next-line no-unused-vars
-let echarts = require('echarts/lib/echarts')
 // 引入柱状图组件
 require('echarts/lib/chart/line')
 // 引入提示框和title组件
 require('echarts/lib/component/tooltip')
 require('echarts/lib/component/title')
+
+Vue.use(Plugin)
+Vue.component(VeHistogram.name, VeHistogram)
 export default {
-  name: 'Content',
-  components: {
-    Page1,
-    Page2,
-    Page3
-  },
   data () {
     return {
-      diag2_visible: false,
-      showViewer: false,
-      currentPage1: 1,
-      url_tmp: 'http://www.zj.xinhuanet.com/edu/txcj.htm',
-      dia_url: ['http://www.zj.xinhuanet.com/edu/txcj.htm', 'https://www.csdn.net/', 'https://blog.csdn.net/super111t/article/details/121657898?spm=1000.2115.3001.5927'],
-      diag_num: 0,
-      dialogVisible: true,
-      loading_bt: false,
-      percentage: 0,
-      dialogTableVisible: true,
-      radio: 'normal',
-      tmp: '上传图片',
-      rurl: ['', '', '', '', ''],
-      link_dic: {
-        'normal': 0,
-        'first': 1,
-        'second': 2,
-        'third': 3,
-        'forth': 4
-      },
-      murl: [],
-      st: [],
-      a1: 0,
-      a2: 0,
-      a3: 0,
-      a4: 0,
-      a5: 0,
+      // button loading属性
       flag: 0,
-      options: [{
-        value: 'normal',
-        label: '患者1'
-      }, {
-        value: 'first',
-        label: '患者2'
-      }, {
-        value: 'second',
-        label: '患者3'
-      }, {
-        value: 'third',
-        label: '患者4'
-      }, {
-        value: 'forth',
-        label: '患者5'
-      }],
-      probl: [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]],
-      numl: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-      weightl: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+      ves_load: false,
+      enh_load: false,
+      dr_load: false,
+      load: false,
+      // url part
+      url_raw: '',
+      url_enh: '',
+      url_ves: ['', ''], // 分割叠加
+      url_ss: ['', ''], // 分类叠加
+      url_dr_enh: '',
+      url_dr_raw: '',
+      url_test: 'https://imagej.net/media/plugins/vessel-analysis-rgb.png',
+      server_url: 'http://127.0.0.1:5000',
+      // name
+      radio: '1',
+      tmp: '上传图片',
+      link_dic: {
+        '1': 0,
+        '2': 1
+      },
+      // chart/table
+      seg_list: [['血管长度密度', 'VLD', ''], ['血管面积密度', 'VAD', ''], ['分形维数', 'FD', ''], ['血管弯曲度','tor','']],
+      feature_list: [['增强前', ''], ['增强后', '']],
+      areaData: {
+        columns: ['种类', '增强前面积', '增强后面积'],
+        rows: [
+          { '种类': '微血管瘤', '增强前面积': 0, '增强后面积': 0 },
+          { '种类': '硬性渗出', '增强前面积': 0, '增强后面积': 0 },
+          { '种类': '出血', '增强前面积': 0, '增强后面积': 0 },
+          { '种类': '棉絮斑', '增强前面积': 0, '增强后面积': 0 }
+        ]
+      },
+      numData: {
+        columns: ['种类', '增强前数量', '增强后数量'],
+        rows: [
+          { '种类': '微血管瘤', '增强前数量': 0, '增强后数量': 0 },
+          { '种类': '硬性渗出', '增强前数量': 0, '增强后数量': 0 },
+          { '种类': '出血', '增强前数量': 0, '增强后数量': 0 },
+          { '种类': '棉絮斑', '增强前数量': 0, '增强后数量': 0 }
+        ]
+      }
     }
   },
   activated () {
     this.init()
   },
+
   mounted () {
+    this.init()
     // 在mounted生命周期或方法中执行下述代码
     this.drawprob()
     this.drawnum()
   },
-  computed: {},
-  watch: {
-    flag (val, oldVal) {
-      this.drawnum()
-      this.drawprob()
-      console.log('flag change')
-    },
-    radio (val, oldVal) {
-      this.drawnum()
-      this.drawprob()
-    }
-  },
   methods: {
-    click_test () {
-      console.log('test_success')
-    },
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
-    },
-    dia_for () {
-      console.log(this.url_tmp)
-      if (this.diag_num < 2) {
-        this.diag_num = this.diag_num + 1
-        this.url_tmp = this.dia_url[this.diag_num]
-        console.log(this.url_tmp)
+    dr () {
+      this.load = true
+      let param = new FormData()
+      console.log('ill')
+      let config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
       }
+      axios
+        .post('http://127.0.0.1:5000/seg/ill', param, config)
+        .then(
+          res => {
+            this.url_dr_raw = 'http://127.0.0.1:5000/tmp/seg/dr_r.png'
+            this.url_dr_enh = 'http://127.0.0.1:5000/tmp/seg/dr_e.png'
+            this.load = false
+            this.feature_list = [['增强前', res.data.kind_r, res.data.p_r],
+              ['增强后', res.data.kind_e, res.data.p_e]]
+            this.areaData = {
+              columns: ['种类', '增强前面积', '增强后面积'],
+              rows: [
+                { '种类': '微血管瘤', '增强前面积': res.data.weight_r[0], '增强后面积': res.data.weight_e[0] },
+                { '种类': '硬性渗出', '增强前面积': res.data.weight_r[1], '增强后面积': res.data.weight_e[1] },
+                { '种类': '出血', '增强前面积': res.data.weight_r[2], '增强后面积': res.data.weight_e[2] },
+                { '种类': '棉絮斑', '增强前面积': res.data.weight_r[3], '增强后面积': res.data.weight_e[3] }
+              ]
+            }
+            this.numData = {
+              columns: ['种类', '增强前数量', '增强后数量'],
+              rows: [
+                { '种类': '微血管瘤', '增强前数量': res.data.count_r[0], '增强后数量': res.data.count_e[0] },
+                { '种类': '硬性渗出', '增强前数量': res.data.count_r[1], '增强后数量': res.data.count_e[1] },
+                { '种类': '出血', '增强前数量': res.data.count_r[2], '增强后数量': res.data.count_e[2] },
+                { '种类': '棉絮斑', '增强前数量': res.data.count_r[3], '增强后数量': res.data.count_e[3] }
+              ]
+            }
+            this.flag = res.data.flag
+            console.log(this.flag)
+          }
+        )
     },
-    dia_back () {
-      if (this.diag_num > 0) {
-        this.diag_num = this.diag_num - 1
-        this.url_tmp = this.dia_url[this.diag_num]
+    enh () {
+      this.load = true
+      let param = new FormData()
+      console.log('enhance')
+      let config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
       }
+      axios
+        .post('http://127.0.0.1:5000/seg/enh', param, config)
+        .then(
+          res => {
+            this.url_enh = 'http://127.0.0.1:5000/tmp/seg/enh.png'
+            this.load = false
+          }
+        )
     },
     drawprob () {
       let prob = this.$echarts.init(document.getElementById('prob'))
       // 绘制图表
-      // eslint-disable-next-line eqeqeq
-
       // eslint-disable-next-line camelcase
       let option_prob = {
         title: { text: '患病概率图' },
@@ -518,85 +606,6 @@ export default {
           }
         ]
       }
-      let test_op = {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { type: 'cross' }
-        },
-        legend: {},
-        xAxis: [
-          {
-            type: 'category',
-            axisTick: {
-              alignWithLabel: true
-            },
-            data: [
-              '1月',
-              '2月',
-              '3月',
-              '4月',
-              '5月',
-              '6月',
-              '7月',
-              '8月',
-              '9月',
-              '10月',
-              '11月',
-              '12月'
-            ]
-          }
-        ],
-        yAxis: [
-          {
-            type: 'value',
-            name: '降水量',
-            min: 0,
-            max: 250,
-            position: 'right',
-            axisLabel: {
-              formatter: '{value} ml'
-            }
-          },
-          {
-            type: 'value',
-            name: '温度',
-            min: 0,
-            max: 25,
-            position: 'left',
-            axisLabel: {
-              formatter: '{value} °C'
-            }
-          }
-        ],
-        series: [
-          {
-            name: '降水量',
-            type: 'bar',
-            yAxisIndex: 0,
-            data: [6, 32, 70, 86, 68.7, 100.7, 125.6, 112.2, 78.7, 48.8, 36.0, 19.3]
-          },
-          {
-            name: '温度',
-            type: 'line',
-            smooth: true,
-            yAxisIndex: 1,
-            data: [
-              6.0,
-              10.2,
-              10.3,
-              11.5,
-              10.3,
-              13.2,
-              14.3,
-              16.4,
-              18.0,
-              16.5,
-              12.0,
-              5.2
-            ]
-          }
-        ]
-      }
       // eslint-disable-next-line eqeqeq
       num.resize()
       num.setOption(option_num, true)
@@ -606,114 +615,254 @@ export default {
       this.$refs.upload.click()
     },
     update (e) {
-      this.tmp = '重新上传'
-      // eslint-disable-next-line no-unused-vars
-      let self = this
-      let files = e.target.files
+      let file = e.target.files[0]
       let param = new FormData()
-      let num = files.length
-      this.testpage = []
-      for (let i = 0; i < files.length; i++) {
-        param.append('files' + i, files[i])
-        var json = {
-          id: i + 1,
-          pic: files[i].name
-        }
-        this.testpage.push(json)
-      }
-      param.append('chunk', num + '') // 添加form表单中其他数据
-      console.log(param.get('file')) // FormData私有类对象，访问不到，可以通过get判断值是否传进去
+      param.append('file', file, file.name)
+      // FormData私有类对象，访问不到，可以通过get判断值是否传进去
+      console.log(param.get('file'))
       let config = {
         headers: { 'Content-Type': 'multipart/form-data' }
       }
-      axios.post('http://127.0.0.1:5000/med1', param, config)
-        .then(res => {
-          this.rurl = []
-          for (let i = 0; i < files.length; i++) {
-            this.rurl.push(res.data.ul[i])
+      axios
+        .post('http://127.0.0.1:5000/upload/seg', param, config)
+        .then(
+          res => {
+            this.url_raw = 'http://127.0.0.1:5000/tmp/seg/raw.png'
+            console.log(this.url_raw)
           }
-        })
+        )
     },
-    run () {
-      this.loading_bt = true
-      this.dialogTableVisible = true
+    vessel_run () {
+      this.load = true
       let param = new FormData()
-      param.append('ul', this.rurl)
-      // eslint-disable-next-line no-unused-vars
+      console.log('enhance')
       let config = {
         headers: { 'Content-Type': 'multipart/form-data' }
       }
-      axios.post('http://127.0.0.1:5000/med1run_fake', param, config)
-        .then(res => {
-          this.murl = []
-          for (let i = 0; i < 5; i++) {
-            this.murl.push(res.data.infol[i])
+      axios
+        .post('http://127.0.0.1:5000/seg/vessel', param, config)
+        .then(
+          res => {
+            this.url_ves = ['http://127.0.0.1:5000/tmp/seg/raw_seg.png', 'http://127.0.0.1:5000/tmp/seg/enh_seg.png']
+            this.url_ss = ['http://127.0.0.1:5000/tmp/seg/raw_ater.png', 'http://127.0.0.1:5000/tmp/seg/enh_ater.png']
+            this.load = false
           }
-          this.numl = res.data.numl
-          this.probl = res.data.probl
-          this.weightl = res.data.weightl
-          this.flag = 1
-          this.loading_bt = false
-          this.diag2_visible = true
-        })
+        )
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.body2{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+@import '~styles/common.scss';
+.lineTd{
+  position:relative;
+  margin:50px auto;
+  width:100px;
+  height:100px;
+  box-sizing:border-box;
+  border:1px solid #333;
+  // background-color:#333;
+  line-height:120px;
+  text-indent:5px;
 }
-.body1{
+.lineTd::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:50px;
+  box-sizing:border-box;
+  border-bottom:1px solid deeppink;
+  transform-origin:bottom center;
+  transform:rotateZ(45deg) scale(1.414);
+}
+.table1 {
+  .lineTd {
+      width: 33%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><line x1="0" y1="0" x2="100%" y2="100%" stroke="black" stroke-width="1"/></svg>');
+      .leader{
+        float:right;
+        margin-top:-3%;
+      }
+      .date{
+        float:left;
+        margin-top:10px
+      }
+    }
+}
+.clearfix {
+  height: 30px;
+}
+.error {
+}
+.clearfix2 {
+  height: 30px;
+  align-items:center;
   display: flex;
-  flex-wrap: wrap;//允许换行排列
+  flex-direction:row;
+  flex-wrap: nowrap;
+  justify-content:space-around;
+}
+.seg{
+  display: flex;
+  flex-direction:column;
+}
+.col{
+  flex-basis: 43%;
+  display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content:space-around;
+}
+.col3{
+  flex-basis: 43%;
+  display: flex;
+  flex-direction: row;
+  justify-content:space-around;
+}
+.col2{
+  flex-basis: 45%;
+}
+.pic_col{
+  width: 60%;
+  display: flex;
+  flex-direction:column;
+  justify-content:space-around;
+  align-items: center;
+}
+.image_row{
+  display: flex;
+  flex-direction:row;
+  flex-wrap: nowrap;
+  justify-content:space-around;
+  margin-bottom: 20px;
+}
+.stat_row{
+  display: flex;
+  flex-direction:row;
+  flex-wrap: nowrap;
+  justify-content:space-around;
+  margin-bottom: 20px;
+}
+.dd{
+  width: 60%;
+  display: flex;
+  flex-direction:column;
+  align-items:center;
+}
+.dd2{
+  display: flex;
+  flex-direction:row;
+  flex-basis: 100%;
+  align-items:center;
+  margin-left: 5%;
+}
+.body{
+  display: flex;
+  flex-direction:row;
+  flex-wrap: nowrap;
+  justify-content:space-around;
+  align-items: flex-start;
+}
+.dr_pic{
+  width: 100%;
+  display: flex;
+  flex-direction:row;
+  justify-content:space-around;
+}
+.seg_pic{
+  width: 89%;
+  display: flex;
+  flex-direction:row;
+  justify-content:space-around;
+}
+.dr_body{
+  display: flex;
+  flex-direction:column;
+  flex-wrap: nowrap;
+  justify-content:space-around;
+  align-items: flex-start;
+}
+.sta_body{
+  align-items:center;
+  display: flex;
+  flex-direction:row;
+  flex-wrap: nowrap;
+  justify-content:space-around;
+  align-content: center;
 }
 .demo-image__preview {
-  width: 130px;
-  height: 130px;
-  top: 120px;
+  width: 80%;
+  aspect-ratio: 1 / 1;
   float: left;
-}
-.main{
+  text-align: center;
+  align-content: center;
   display: flex;
-  flex-wrap: wrap;//允许换行排列
-  flex-direction: column;
-  justify-content: space-around;
-}
-.image_1 {
-  width: 130px;
-  height: 130px;
-  background: #ffffff;
-  top:40px;
+  flex-direction:column;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.09);
 }
 .info_1 {
-  height: 30px;
-  width: 130px;
   text-align: center;
-  top: 180px;
-  position: absolute;
-  background-color: #ffffff;
   line-height: 30px;
+  background-color: #21b3b9;
+  width:80%
+}
+.o-image__preview {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  float: left;
+  text-align: center;
+  align-content: center;
+  display: flex;
+  flex-direction:column;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.09);
 }
 .info_2 {
-  height: 30px;
-  width: 240px;
+  width: 100%;
   text-align: center;
-  top: 310px;
-  position: absolute;
-  background-color: #ffffff;
   line-height: 30px;
+  background-color: #21b3b9;
 }
-.dashboard {
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC,
-  Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
-  sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+.steps {
+  font-family: "lucida grande", "lucida sans unicode", lucida, helvetica,
+  "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  color: #21b3b9;
+  text-align: center;
+  font-weight: bold;
+}
+.image_1 {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #ffffff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.09);
   display: flex;
-  flex-direction: row;
+  justify-content: center;
+  align-items:center;
+}
+.table {
+  width: 100%;
+  flex-basis: 30%;
+
+}
+.charts {
+  width: 100%;
+  display: flex;
+  flex-direction:row;
+  justify-content: center; /* 水平居中 */
+}
+.chart {
+
+}
+.tc{
+  display: flex;
+  flex-direction:column;
+  justify-content: center; /* 水平居中 */
+  flex-basis: 50%;
+}
+.pic{
+  flex-basis: 40%;
+  display: flex;
+  flex-direction:column;
+  margin-right: 3%;
 }
 </style>

@@ -1,3 +1,4 @@
+//眼底彩照疾病筛查系统
 <template>
   <div class="dashboard" >
     <el-dialog width="30%" :visible.sync="dialogVisible" :before-close="handleClose" :title="title">
@@ -23,7 +24,7 @@
     <el-dialog width="30%" :visible.sync="diag2_visible" :before-close="handleClose">
       <p style="text-align: center">完成运行</p>
     </el-dialog>
-    <el-row class="main" style="flex:7; margin-right: 20px" :gutter="40">
+    <el-row class="main" style="flex:7; margin-right: 20px; margin-left: 10%" :gutter="40">
       <el-col style="flex: 4">
         <el-card
           id="CT_image_1"

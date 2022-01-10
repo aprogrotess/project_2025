@@ -204,7 +204,7 @@ export default {
     })
   },
   methods: {
-    previewPic (url) {
+     previewPic (url) {
       this.previewpic = url
       this.dialogVisible = true
     },
@@ -243,7 +243,6 @@ export default {
 
 }
 </script>
-
 <style scoped>
 * {
   box-sizing: border-box;

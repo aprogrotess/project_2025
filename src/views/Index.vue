@@ -54,7 +54,6 @@
     </cc-drawer>
   </div>
 </template>
-
 <script>
 import Sider from '@/components/sider'
 import Header from '@/components/Header'
@@ -117,7 +116,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .main {
   font-size: 14px;
